@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Movie;
+use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
@@ -9,9 +12,17 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $startDate = Carbon::today();
+        $endDate = Carbon::today()->addDays(15);
+
+        $moviesOnShow = Movie::whereHas('screenings', function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        })->get();
+
+        return view('movies.index')
+            ->with('moviesOnShow', $moviesOnShow);
     }
 
     /**

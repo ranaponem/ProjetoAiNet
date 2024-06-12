@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
 
     });
 });
+
+Route::resource('movies', MovieController::class);
 
 require __DIR__.'/auth.php';
