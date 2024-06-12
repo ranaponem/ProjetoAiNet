@@ -7,6 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    @dump($moviesOnShow)
+    @foreach($moviesOnShow as $movie)
+        <img src='{{$movie->poster_filename}}' alt = {{$movie->poster_filename}}>
+        <p>{{$movie->title}}</p>
+    @endforeach
 </body>
 </html>
