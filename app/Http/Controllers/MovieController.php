@@ -46,12 +46,14 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): View
     {
-        $startDate = Carbon::today();
-        $endDate = Carbon::today()->addDays(15);
+        $now = Carbon::now();
+        $fiveMinutesAgo = $now->copy()->subMinutes(5);
+        $screenings = $movie->screenings()
+                            ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', start_time), '%Y-%m-%d %H:%i:%s') >= ?", [$fiveMinutesAgo])
+                            ->get();
 
-        $screenings = $movie->screenings()->whereBetween('date', [$startDate, $endDate])->get();
         return view('movies.show')
-            ->with('movie', $movie)->with('screenings', $screenings);
+            ->with('movie', $movie)->with('screenings', $screenings)->with('time', $now);
     }
 
     /**

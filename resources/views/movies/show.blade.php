@@ -10,8 +10,9 @@
     <img src="{{$movie->getImageUrlAttribute()}}" alt = {{$movie->poster_filename}}>
     <p>{{$movie->title}}</p>
     <p>{{$movie->id}}</p>
+    <p>{{$time}}</p>
     @foreach($screenings as $screening)
-        <p>{{$screening->date}}</p>
+        <p>{{$screening->date}} {{$screening->start_time}}</p>
     @endforeach
 </body>
 </html>
