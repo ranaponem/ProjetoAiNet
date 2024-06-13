@@ -22,19 +22,28 @@ class CustomerPolicy
         return $user->type === 'A';
     }
 
-    //create the view function
-    //check if the user is an admin or the customer
-    //TODO
+
     public function view(User $user, Customer $customer): bool
     {
-        return $user->type === 'A' || $user->id === $customer->user_id;
+        $aux = $customer->user();
+        return $user->type === 'A' || ($user->id === $aux->id && $user->type === 'C');
     }
 
-
-
-
-    public function __construct()
+    public function create(User $user): bool
     {
-        //
+        return $user->type === 'C';
     }
+
+    public function update(User $user, Customer $customer): bool
+    {
+        $aux = $customer->user();
+        return $user->type === 'A' || ($user->id === $aux->id && $user->type === 'C');
+    }
+
+    public function delete(User $user, Customer $customer): bool
+    {
+        $aux = $customer->user();
+        return $user->type === 'A' || ($user->id === $aux->id && $user->type === 'C');
+    }
+
 }

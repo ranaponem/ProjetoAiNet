@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Models\Customer;
 
-class CustomerController extends Controller
+class CustomerController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+    public function __construct()
+    {
+        $this->authorizeResource(Customer::class);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+        return view('customers.index')->with('customers', $customers);
     }
 
     /**
@@ -19,7 +27,8 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        //return the register view
+        return view('auth.register');
     }
 
     /**
@@ -27,7 +36,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -35,7 +44,10 @@ class CustomerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //show a view that specifies the customer details
+        $customer = Customer::find($id);
+        return view('customers.show')->with('customer', $customer);
+
     }
 
     /**
