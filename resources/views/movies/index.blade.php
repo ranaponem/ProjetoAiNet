@@ -1,16 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+@extends('layouts.main')
+
+@section('header-title', 'Movies on show')
+
+@section('main')
+
+
+
+<main>
+    <div class="flex flex-wrap justify-center">
     @foreach($moviesOnShow as $movie)
-        <img src="{{$movie->getImageUrlAttribute()}}" alt = {{$movie->poster_filename}}>
-        <p>{{$movie->title}}</p>
-        <p>{{$movie->id}}</p>
+    
+        <div class="w-full md:w-1/2 lg:w-1/5 p-2">
+            <a href="{{ route('movies.show', ['movie' => $movie]) }}">
+                <div class="h-full rounded overflow-hidden shadow-lg bg-white dark:bg-gray-900">
+                    <img class="h-5/6 w-full"src="{{$movie->getImageUrlAttribute()}}" alt = {{$movie->poster_filename}}>
+                    <h1 class="text-center font-bold mb-4 mt-4 text-black dark:text-gray-50">{{$movie->title}}</h1>
+                </div>
+            </a>
+        </div>
+    
     @endforeach
-</body>
-</html>
+    </div>
+</main>
+@endsection
