@@ -25,7 +25,7 @@ class CustomerPolicy
 
     public function view(User $user, Customer $customer): bool
     {
-        $aux = $customer->user();
+        $aux = $customer->user;
         return $user->type === 'A' || ($user->id === $aux->id && $user->type === 'C');
     }
 
@@ -36,7 +36,7 @@ class CustomerPolicy
 
     public function update(User $user, Customer $customer): bool
     {
-        $aux = $customer->user();
+        $aux = $customer->user;
         return $user->type === 'A' || ($user->id === $aux->id && $user->type === 'C');
     }
 

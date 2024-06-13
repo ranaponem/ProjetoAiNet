@@ -42,12 +42,9 @@ class CustomerController extends \Illuminate\Routing\Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Customer $customer)
     {
-        //show a view that specifies the customer details
-        $customer = Customer::find($id);
         return view('customers.show')->with('customer', $customer);
-
     }
 
     /**
