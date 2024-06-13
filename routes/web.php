@@ -28,7 +28,7 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
 
 
     Route::middleware(['auth', 'can:employee'])->group(function () {
-        //group of routes that are only accessible to users who are employees
+        //group of routes that are only accessible to users who are users
 
 
     });
