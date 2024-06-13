@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
+
     /**
      * Register any application services.
      */
@@ -35,5 +36,8 @@ class AppServiceProvider extends ServiceProvider
             return $user->type === 'C';
         });
 
+        Gate::guessPolicyNamesUsing(function ($modelClass): string {
+            return 'App\\Policies\\' . class_basename($modelClass) . 'Policy';
+        });
     }
 }
