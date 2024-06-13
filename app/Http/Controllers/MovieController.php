@@ -44,9 +44,14 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Movie $movie): View
     {
-        //
+        $startDate = Carbon::today();
+        $endDate = Carbon::today()->addDays(15);
+
+        $screenings = $movie->screenings()->whereBetween('date', [$startDate, $endDate])->get();
+        return view('movies.show')
+            ->with('movie', $movie)->with('screenings', $screenings);
     }
 
     /**

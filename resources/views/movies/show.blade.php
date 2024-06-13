@@ -7,10 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    @foreach($moviesOnShow as $movie)
-        <img src="{{$movie->getImageUrlAttribute()}}" alt = {{$movie->poster_filename}}>
-        <p>{{$movie->title}}</p>
-        <p>{{$movie->id}}</p>
+    <img src="{{$movie->getImageUrlAttribute()}}" alt = {{$movie->poster_filename}}>
+    <p>{{$movie->title}}</p>
+    <p>{{$movie->id}}</p>
+    @foreach($screenings as $screening)
+        <p>{{$screening->date}}</p>
     @endforeach
 </body>
 </html>
