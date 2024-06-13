@@ -18,8 +18,10 @@ class Customer extends Model
         'payment_ref',
     ];
 
+    public $incrementing = false;
+
     public function user(): BelongsTo{
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id', 'id')->withTrashed();
     }
 
     public function purchases(): HasMany{

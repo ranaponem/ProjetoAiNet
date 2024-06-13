@@ -8,7 +8,7 @@
 </head>
 <body>
     @foreach($moviesOnShow as $movie)
-        <img src='{{$movie->poster_filename}}' alt = {{$movie->poster_filename}}>
+        <img src="{{ asset('storage/posters/' . $movie->poster_filename) }}" alt = {{$movie->poster_filename}}>
         <p>{{$movie->title}}</p>
     @endforeach
 </body>

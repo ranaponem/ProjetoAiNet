@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -24,7 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'type',
-        'blocked'
+        'blocked',
+        'photo_filename'
     ];
 
     /**
@@ -48,6 +50,11 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getImageExistsAttribute()
+    {
+        return Storage::exists("public/photos/{$this->photo_filename}");
     }
 
     public function customer(): HasOne{

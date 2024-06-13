@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Movie extends Model
 {
@@ -21,8 +22,22 @@ class Movie extends Model
         'trailer_url',
     ];
 
+    public function getImageExistsAttribute()
+    {
+        return Storage::exists("public/posters/{$this->poster_filename}");
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->imageExists) {
+            return asset("storage/posters/{$this->poster_filename}");
+        } else {
+            return asset("storage/posters/_no_poster_2.png");
+        }
+    }
+
     public function genre(): BelongsTo{
-        return $this->belongsTo(Genre::class);
+        return $this->belongsTo(Genre::class, 'code', 'genre_code')->withTrashed();
     }
 
     public function screenings(): HasMany{
