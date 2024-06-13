@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -9,9 +11,10 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $tickets = Ticket::all();
+        return view('tickets.index')->with('tickets', $tickets);
     }
 
     /**

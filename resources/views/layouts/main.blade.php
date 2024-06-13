@@ -28,58 +28,6 @@
                     <!-- Menu Items -->
                     <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
                     invisible h-0 sm:visible sm:h-auto">
-                        <!-- Menu Item: Courses -->
-                        @can('viewShowcase', App\Models\Course::class)
-                            <x-menus.menu-item
-                                content="Courses"
-                                href="{{ route('courses.showcase') }}"
-                                selected="{{ Route::currentRouteName() == 'courses.showcase'}}"
-                            />
-                        @endcan
-
-                        <!-- Menu Item: Curricula -->
-                        @can('viewCurriculum', App\Models\Course::class)
-                            <x-menus.submenu-full-width
-                                content="Curricula"
-                                selectable="1"
-                                selected="0"
-                                uniqueName="submenu_curricula">
-                                @foreach ($courses as $course)
-                                    <x-menus.submenu-item
-                                    :content="$course->fullName"
-                                    selectable="1"
-                                    selected="0"
-                                    href="{{ route('courses.curriculum', ['course' => $course]) }}"/>
-                                @endforeach
-                            </x-menus.submenu-full-width>
-                        @endcan
-                        <!-- Menu Item: Disciplines -->
-                        @can('viewAny', App\Models\Discipline::class)
-                        <x-menus.menu-item
-                            content="Disciplines"
-                            selectable="1"
-                            href="{{ route('disciplines.index') }}"
-                            selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                            />
-                        @endcan
-
-                        <!-- Menu Item: Teachers -->
-                        @can('viewAny', App\Models\Teacher::class)
-                            <x-menus.menu-item
-                                content="Teachers"
-                                selectable="1"
-                                href="{{ route('teachers.index') }}"
-                                selected="{{ Route::currentRouteName() == 'teachers.index'}}"
-                                />
-                        @endcan
-
-                        {{-- If user has any of the 4 menu options previlege, then it should show the submenu --}}
-                        @if(
-                            Gate::check('viewAny', App\Models\Student::class) ||
-                            Gate::check('viewAny', App\Models\User::class) ||
-                            Gate::check('viewAny', App\Models\Department::class) ||
-                            Gate::check('viewAny', App\Models\Course::class)
-                            )
                         <!-- Menu Item: Others -->
                         <x-menus.submenu
                             selectable="0"
@@ -110,7 +58,6 @@
                                     href="{{ route('courses.index') }}"/>
                                 @endcan
                         </x-menus.submenu>
-                        @endif
 
                         <div class="grow"></div>
 

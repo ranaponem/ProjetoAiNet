@@ -6,19 +6,19 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Submenu extends Component
+class SubMenuItem extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public string $uniqueName,
-        public string $content='Submenu',
+        public string $content = 'Submenu Item',
+        public string $href = '#',
         public bool $selectable = true,
-        public bool $selected = false
+        public bool $selected = false,
+        public string $form = '',
     )
     {
-
     }
 
     /**
@@ -26,6 +26,6 @@ class Submenu extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.menus.submenu');
+        return view('components.menus.submenu-item');
     }
 }

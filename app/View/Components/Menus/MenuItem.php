@@ -1,21 +1,29 @@
 <?php
 
-// app/View/Components/Menus/MenuItem.php
-
 namespace App\View\Components\Menus;
 
+use Closure;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class MenuItem extends Component
 {
-    //selectable and selected
-    public $selectable;
-    public $selected;
-    public $href;
-    public $content;
+    /**
+     * Create a new component instance.
+     */
+    public function __construct(
+        public string $content = 'Menu Item',
+        public string $href = '#',
+        public bool $selectable = true,
+        public bool $selected = false
+    )
+    {
+    }
 
-
-    public function render()
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
     {
         return view('components.menus.menu-item');
     }
