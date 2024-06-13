@@ -1,24 +1,23 @@
 <?php
 
-namespace App\View\Components\Menus;
+namespace App\View\Components\Administratives;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Submenu extends Component
+class FilterCard extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public string $uniqueName,
-        public string $content='Submenu',
-        public bool $selectable = true,
-        public bool $selected = false
+        public string $filterAction,
+        public string $resetUrl,
+        public ?string $name = null,
     )
     {
-
+        //
     }
 
     /**
@@ -26,6 +25,6 @@ class Submenu extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.menus.submenu');
+        return view('components.administratives.filter-card');
     }
 }

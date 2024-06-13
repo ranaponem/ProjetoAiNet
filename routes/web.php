@@ -41,5 +41,6 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
 });
 
 Route::resource('movies', MovieController::class);
+Route::resource('administratives', AdministrativeController::class);
 
 require __DIR__.'/auth.php';
