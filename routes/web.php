@@ -4,6 +4,7 @@ use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('customers', CustomerController::class);
+Route::resource('users',UserController::class);
 
 //Criar rotas para os diferentes tipos de utilizadores
 //Miguel Silva
@@ -42,6 +44,5 @@ Route::middleware(['auth', 'can:admin'])->group(function () {
 });
 
 Route::resource('movies', MovieController::class);
-Route::resource('administratives', AdministrativeController::class);
 
 require __DIR__.'/auth.php';

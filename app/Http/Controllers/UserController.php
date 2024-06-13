@@ -5,7 +5,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\User;
 
-class EmployeeController extends \Illuminate\Routing\Controller
+class UserController extends \Illuminate\Routing\Controller
 {
     use AuthorizesRequests;
     public function __construct()
@@ -15,11 +15,27 @@ class EmployeeController extends \Illuminate\Routing\Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return view('users.index')->with('users', $users);
+        $query = User::query();
+
+        if ($request->has('type') && $request->type) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('search') && $request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $users = $query->get();
+
+        return view('users.index', compact('users'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
