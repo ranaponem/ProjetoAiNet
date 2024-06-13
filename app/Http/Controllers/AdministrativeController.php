@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\AdministrativeFormRequest;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
@@ -31,14 +32,14 @@ class AdministrativeController extends Controller
     }
 
 
-    public function show(User $administrative): View
+    public function show(AuthUser $administrative): View
     {
         return view('administratives.show')->with('administrative', $administrative);
     }
 
     public function create(): View
     {
-        $newAdministrative = new User();
+        $newAdministrative = new AuthUser();
         $newAdministrative->type = 'A';
         return view('administratives.create')
             ->with('administrative', $newAdministrative);
@@ -47,7 +48,7 @@ class AdministrativeController extends Controller
     public function store(AdministrativeFormRequest $request): RedirectResponse
     {
         $validatedData = $request->validated();
-        $newAdministrative = new User();
+        $newAdministrative = new AuthUser();
         $newAdministrative->type = 'A';
         $newAdministrative->name = $validatedData['name'];
         $newAdministrative->email = $validatedData['email'];
@@ -68,13 +69,13 @@ class AdministrativeController extends Controller
             ->with('alert-msg', $htmlMessage);
     }
 
-    public function edit(User $administrative): View
+    public function edit(AuthUser $administrative): View
     {
         return view('administratives.edit')
             ->with('administrative', $administrative);
     }
 
-    public function update(AdministrativeFormRequest $request, User $administrative): RedirectResponse
+    public function update(AdministrativeFormRequest $request, AuthUser $administrative): RedirectResponse
     {
         $validatedData = $request->validated();
         $administrative->type = 'A';
@@ -102,7 +103,7 @@ class AdministrativeController extends Controller
             ->with('alert-msg', $htmlMessage);
     }
 
-    public function destroy(User $administrative): RedirectResponse
+    public function destroy(AuthUser $administrative): RedirectResponse
     {
         try {
             $url = route('administratives.show', ['administrative' => $administrative]);

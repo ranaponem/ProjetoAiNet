@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
