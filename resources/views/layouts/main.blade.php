@@ -28,36 +28,6 @@
                     <!-- Menu Items -->
                     <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
                     invisible h-0 sm:visible sm:h-auto">
-                        <!-- Menu Item: Others -->
-                        <x-menus.submenu
-                            selectable="0"
-                            uniqueName="submenu_others"
-                            content="More">
-                                @can('viewAny', App\Models\Student::class)
-                                <x-menus.submenu-item
-                                    content="Students"
-                                    selectable="0"
-                                    href="{{ route('students.index') }}" />
-                                @endcan
-                                @can('viewAny', App\Models\User::class)
-                                <x-menus.submenu-item
-                                    content="Administratives"
-                                    selectable="0"
-                                    href="{{ route('administratives.index') }}" />
-                                @endcan
-                                <hr>
-                                @can('viewAny', App\Models\Department::class)
-                                <x-menus.submenu-item
-                                    content="Departments"
-                                    selectable="0"
-                                    href="{{ route('departments.index') }}"/>
-                                @endcan
-                                @can('viewAny', App\Models\Course::class)
-                                <x-menus.submenu-item
-                                    content="Course Management"
-                                    href="{{ route('courses.index') }}"/>
-                                @endcan
-                        </x-menus.submenu>
 
                         <div class="grow"></div>
 
@@ -86,35 +56,12 @@
                                     {{ Auth::user()->name }}
                                 </div>
                             </x-slot>
-                            @can('viewMy', App\Models\Discipline::class)
-                            <x-menus.submenu-item
-                                content="My Disciplines"
-                                selectable="0"
-                                href="{{ route('disciplines.my') }}"/>
-                            @endcan
-                            @can('viewMy', App\Models\Teacher::class)
-                            <x-menus.submenu-item
-                                content="My Teachers"
-                                selectable="0"
-                                href="{{ route('teachers.my') }}"/>
-                            @endcan
-                            @can('viewMy', App\Models\Student::class)
-                                <x-menus.submenu-item
-                                    content="My Students"
-                                    selectable="0"
-                                    href="{{ route('students.my') }}"/>
-                                <hr>
-                            @endcan
                             @auth
                             <hr>
                             <x-menus.submenu-item
                                 content="Profile"
                                 selectable="0"
-                                :href="match(Auth::user()->type) {
-                                    'A' => route('administratives.edit', ['administrative' => Auth::user()]),
-                                    'T' => route('teachers.edit', ['teacher' => Auth::user()->teacher]),
-                                    'S' => route('students.edit', ['student' => Auth::user()->student]),
-                                }"/>
+                                href="{{ route('profile.edit')}} "/>
                             <x-menus.submenu-item
                                 content="Change Password"
                                 selectable="0"
@@ -138,17 +85,6 @@
                             selected="{{ Route::currentRouteName() == 'login'}}"
                             />
                         @endauth
-                    </div>
-                    <!-- Hamburger -->
-                    <div class="absolute right-0 top-0 flex sm:hidden pt-3 pe-3 text-black dark:text-gray-50">
-                        <button id="hamburger_btn">
-                            <svg class="h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path id="hamburger_btn_open" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                <path class="invisible" id="hamburger_btn_close" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>

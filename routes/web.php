@@ -5,12 +5,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return redirect()->route('movies.index');
-})->name('home');
 
 //Not verified users
 Route::middleware('auth')->group(function () {
@@ -23,11 +20,17 @@ Route::middleware('auth')->group(function () {
 //Verified users
 Route::middleware('auth', 'verified')->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
-        Route::resource('administratives', AdministrativeController::class);
+        Route::resource('customers', CustomerController::class);
+        Route::resource('users', UserController::class);
+        Route::resource('theaters', TheaterController::class);
 });
 
-Route::resource('customers', CustomerController::class);
-Route::resource('users',UserController::class);
+//Public routes
+
+Route::get('/', function () {
+    return redirect()->route('movies.index');
+})->name('home');
+
 Route::resource('movies', MovieController::class);
 
 Route::middleware('can:use-cart')->group(function () {
