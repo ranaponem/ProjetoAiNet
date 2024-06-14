@@ -23,10 +23,9 @@ class UserPolicy
     }
 
 
-    public function view(User $user, Customer $customer): bool
+    public function view(User $user): bool
     {
-        $aux = $customer->user;
-        return $user->type === 'A' ;
+        return $user->type === 'A';
     }
 
     public function create(User $user): bool

@@ -43,7 +43,7 @@
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="grid grid-cols-1 gap-4 mt-6">
                 @foreach($users as $user)
                     <div class="bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex">
                         <div class="p-6 sm:px-20 bg-gray-800 border-b border-gray-600 w-full">

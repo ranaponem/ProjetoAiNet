@@ -12,6 +12,16 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    @can('view', \App\Models\User::class)
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('dashboard')">
+                        {{ __('Users') }}
+                    </x-nav-link>
+                    @endcan
+                    @can('view', \App\Models\Theater::class)
+                    <x-nav-link :href="route('theaters.index')" :active="request()->routeIs('dashboard')">
+                        {{ __('Theaters') }}
+                    </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -49,6 +59,16 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            @else
+            <form method="POST" action="{{ route('logout') }}" class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                @csrf
+
+                <x-nav-link :href="route('logout')"
+                        onclick="event.preventDefault();
+                                    this.closest('form').submit();">
+                    {{ __('Login') }}
+                </x-nav-link>
+            </form>
             @endif
         </div>
     </div>

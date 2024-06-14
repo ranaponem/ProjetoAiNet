@@ -21,7 +21,7 @@ class TheaterPolicy
     }
 
 
-    public function view(User $user, Theater $theater): bool
+    public function view(User $user): bool
     {
         return $user->type === 'A';
     }
