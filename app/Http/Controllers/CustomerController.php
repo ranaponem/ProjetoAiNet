@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use Illuminate\Contracts\View\View;
 
 class CustomerController extends \Illuminate\Routing\Controller
 {
@@ -50,9 +51,9 @@ class CustomerController extends \Illuminate\Routing\Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Customer $customer): View
     {
-        //
+        return view('customers.edit')->with('customer', $customer);
     }
 
     /**
