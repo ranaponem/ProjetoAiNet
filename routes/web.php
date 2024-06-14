@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdministrativeController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
@@ -8,13 +9,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('home');
+    return redirect()->route('movies.index');
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+//Not verified users
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -22,27 +20,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit/password', [ProfileController::class, 'editPassword'])->name('profile.edit.password');
 });
 
-Route::resource('customers', CustomerController::class);
-Route::resource('users',UserController::class);
-
-//Criar rotas para os diferentes tipos de utilizadores
-//Miguel Silva
-Route::middleware(['auth', 'can:admin'])->group(function () {
-    //group of routes that are only accessible to users who are admins
-
-
-    Route::middleware(['auth', 'can:employee'])->group(function () {
-        //group of routes that are only accessible to users who are users
-
-
-    });
-    Route::middleware(['auth', 'can:customer'])->group(function () {
-        //group of routes that are only accessible to users who are customers
-
-
-    });
+//Verified users
+Route::middleware('auth', 'verified')->group(function () {
+        Route::view('/dashboard', 'dashboard')->name('dashboard');
+        Route::resource('administratives', AdministrativeController::class);
 });
 
+Route::resource('customers', CustomerController::class);
+Route::resource('users',UserController::class);
 Route::resource('movies', MovieController::class);
+
+Route::middleware('can:use-cart')->group(function () {
+    // Add a discipline to the cart:
+    Route::post('cart/{ticket}', [CartController::class, 'addToCart'])
+        ->name('cart.add');
+    // Remove a discipline from the cart:
+    Route::delete('cart/{ticket}', [CartController::class, 'removeFromCart'])
+        ->name('cart.remove');
+    // Show the cart:
+    Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+    // Clear the cart:
+    Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+});
 
 require __DIR__.'/auth.php';

@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use App\Models\Discipline;
 use App\Models\Student;
+use App\Models\Ticket;
 
 class CartController extends Controller
 {
@@ -18,62 +19,62 @@ class CartController extends Controller
         return view('cart.show', compact('cart'));
     }
 
-    public function addToCart(Request $request, Discipline $discipline): RedirectResponse
+    public function addToCart(Request $request, Ticket $ticket): RedirectResponse
     {
         $cart = session('cart', null);
         if (!$cart) {
-            $cart = collect([$discipline]);
+            $cart = collect([$ticket]);
             $request->session()->put('cart', $cart);
         } else {
-            if ($cart->firstWhere('id', $discipline->id)) {
+            if ($cart->firstWhere('id', $ticket->id)) {
                 $alertType = 'warning';
-                $url = route('disciplines.show', ['discipline' => $discipline]);
-                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-                <strong>\"{$discipline->name}\"</strong> was not added to the cart because it is already there!";
+                $url = route('tickets.show', ['ticket' => $ticket]);
+                $htmlMessage = "Ticket <a href='$url'>#{$ticket->id}</a>
+                <strong>\"{$ticket->name}\"</strong> was not added to the cart because it is already there!";
                 return back()
                     ->with('alert-msg', $htmlMessage)
                     ->with('alert-type', $alertType);
             } else {
-                $cart->push($discipline);
+                $cart->push($ticket);
             }
         }
         $alertType = 'success';
-        $url = route('disciplines.show', ['discipline' => $discipline]);
-        $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-                <strong>\"{$discipline->name}\"</strong> was added to the cart.";
+        $url = route('disciplines.show', ['discipline' => $ticket]);
+        $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
+                <strong>\"{$ticket->name}\"</strong> was added to the cart.";
         return back()
             ->with('alert-msg', $htmlMessage)
             ->with('alert-type', $alertType);
     }
 
-    public function removeFromCart(Request $request, Discipline $discipline): RedirectResponse
+    public function removeFromCart(Request $request, Ticket $ticket): RedirectResponse
     {
-        $url = route('disciplines.show', ['discipline' => $discipline]);
+        $url = route('disciplines.show', ['discipline' => $ticket]);
         $cart = session('cart', null);
         if (!$cart) {
             $alertType = 'warning';
-            $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-                <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart is empty!";
+            $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
+                <strong>\"{$ticket->name}\"</strong> was not removed from the cart because cart is empty!";
             return back()
                 ->with('alert-msg', $htmlMessage)
                 ->with('alert-type', $alertType);
         } else {
-            $element = $cart->firstWhere('id', $discipline->id);
+            $element = $cart->firstWhere('id', $ticket->id);
             if ($element) {
                 $cart->forget($cart->search($element));
                 if ($cart->count() == 0) {
                     $request->session()->forget('cart');
                 }
                 $alertType = 'success';
-                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-                <strong>\"{$discipline->name}\"</strong> was removed from the cart.";
+                $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
+                <strong>\"{$ticket->name}\"</strong> was removed from the cart.";
                 return back()
                     ->with('alert-msg', $htmlMessage)
                     ->with('alert-type', $alertType);
             } else {
                 $alertType = 'warning';
-                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-                <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart does not include it!";
+                $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
+                <strong>\"{$ticket->name}\"</strong> was not removed from the cart because cart does not include it!";
                 return back()
                     ->with('alert-msg', $htmlMessage)
                     ->with('alert-type', $alertType);
