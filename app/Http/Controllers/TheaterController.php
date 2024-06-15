@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TheaterController extends Controller
 {
@@ -51,14 +52,6 @@ class TheaterController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Theater $theater)
-    {
-        //return view('theaters.show')->with('theater', $theater);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Theater $theater)
@@ -88,5 +81,18 @@ class TheaterController extends Controller
         $theater->delete();
 
         return redirect()->route('theaters.index');
+    }
+
+    public function destroyPhoto(Theater $theater): RedirectResponse
+    {
+        if ($theater->photo_filename) {
+            if (Storage::fileExists('public/photos/' . $theater->photo_filename)) {
+                Storage::delete('public/photos/' . $theater->photo_filename);
+            }
+            $theater->photo_filename = null;
+            $theater->save();
+            return redirect()->back();
+        }
+        return redirect()->back();
     }
 }

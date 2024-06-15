@@ -16,8 +16,9 @@
             width="md"
             :readonly="$readonly"
             deleteTitle="Delete Image"
-            :deleteAllow="($mode == 'edit') && ($theater->imageExists)"
+            :deleteAllow="($mode == 'edit') && ($theater->getImageExistsAttribute())"
             deleteForm="form_to_delete_image"
+            :imageUrl="$theater->getImageUrlAttribute()"
             />
     </div>
 </div>

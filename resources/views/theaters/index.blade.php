@@ -42,7 +42,7 @@
                     <div class="h-full justify-end rounded overflow-hidden bg-gray-80 flex">
                         @can('update', $theater)
                             <div class="mt-6 mx-6">
-                                <a href="#"
+                                <a href="{{route('theaters.edit', ['theater' => $theater])}}"
                                     class="inline-block px-4 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition duration-200">
                                     {{ __('Edit') }}
                                 </a>

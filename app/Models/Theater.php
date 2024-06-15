@@ -20,7 +20,7 @@ class Theater extends Model
 
     public function getImageExistsAttribute()
     {
-        return Storage::exists("public/photos/{$this->photo_filename}");
+        return $this->photo_filename === NULL ? false : Storage::exists("public/photos/{$this->photo_filename}");
     }
 
     public function getImageUrlAttribute()
