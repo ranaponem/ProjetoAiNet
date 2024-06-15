@@ -7,6 +7,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UserController;
+use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
 
 //Not verified users
@@ -24,15 +25,18 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
         Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');
+        Route::resource('movies', MovieController::class)->except(['index, show']);
+        Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
 });
 
 //Public routes
 
 Route::get('/', function () {
-    return redirect()->route('movies.index');
+    return redirect()->route('movies.indexOnShow');
 })->name('home');
 
-Route::resource('movies', MovieController::class);
+Route::get('/moviesOnShow', [MovieController::class, 'indexOnShow'])->name('movies.indexOnShow');
+Route::get('/moviesOnShow/{movie}/show', [MovieController::class, 'show'])->name('movies.show');
 
 Route::middleware('can:use-cart')->group(function () {
     // Add a discipline to the cart:

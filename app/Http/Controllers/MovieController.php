@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use AuthorizesRequests;
+
     public function index(): View
+    {
+        $movies = Movie::all();
+        return view('movies.index')
+            ->with('movies', $movies);
+    }
+
+    public function indexOnShow(): View
     {
         $startDate = Carbon::today();
         $endDate = Carbon::today()->addDays(15);
@@ -22,7 +29,7 @@ class MovieController extends Controller
             $query->whereBetween('date', [$startDate, $endDate]);
         })->get();
 
-        return view('movies.index')
+        return view('movies.indexOnShow')
             ->with('moviesOnShow', $moviesOnShow);
     }
 

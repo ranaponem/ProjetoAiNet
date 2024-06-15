@@ -4,19 +4,22 @@ namespace App\Policies;
 
 use App\Models\Movie;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MoviePolicy
 {
-    public function before(User $user): ?bool
-    {
-        return true;
-    }
+    use HandlesAuthorization;
 
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->type === 'A';
     }
 
+
+    public function viewOnShow(User $user): bool
+    {
+        return true;
+    }
 
     public function view(User $user): bool
     {
