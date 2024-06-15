@@ -67,16 +67,26 @@
                                               :value="$user->type === 'A' ? 'Admin' : ($user->type === 'E' ? 'Employee' : 'Customer')" required disabled />
                                 <x-input-error class="mt-2" :messages="$errors->get('type')" />
                             </div>
+                            <div class="flex">
 
-                            <div class="mt-6">
-                                <a href="{{ route('users.edit', $user->id) }}"
-                                   class="inline-block px-4 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition duration-200">
-                                    {{ __('Edit') }}
-                                </a>
+                                <div class="mt-6 inline-block mr-2">
+                                    <a href="{{ route('users.edit', $user->id) }}"
+                                    class="inline-block px-4 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition duration-200">
+                                        {{ __('Edit') }}
+                                    </a>
+                                </div>
+                                
+                                <div class="mt-6 inline-block ml-2">
+                                    <a href="#"
+                                        class="inline-block px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-200">
+                                        {{ __('Delete') }}
+                                    </a>
+                                </div>
                             </div>
+                        
                         </div>
 
-                        <div class="p-6 sm:px-20 bg-gray-800 border-b border-gray-600 w-64">
+                        <div class="p-6 sm:px-10 bg-gray-800 border-b border-gray-600 w-64">
                             <div class="flex justify-center">
                                 @if($user->photo_filename)
                                     <img src="{{ $user->getImageUrlAttribute() }}" alt="Profile Picture"

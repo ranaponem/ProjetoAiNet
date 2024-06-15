@@ -5,35 +5,67 @@
 @section('main')
 
 <main>
-    <div class="flex flex-wrap justify-center">
-    @foreach($theaters as $theater)
-    
-        <div class="w-full p-2">
-            <div class="h-full rounded overflow-hidden shadow-lg bg-white dark:bg-gray-900">
-                <h1 class="text-left font-bold ml-4 mb-4 mt-4 text-black dark:text-gray-50">{{$theater->name}}</h1>
-                @can('update', $theater)
-                <a href="{{route('theaters.edit', ['theater' => $theater])}}">
-                    Edit
-                </a>
-                @endcan
-                @can('delete', $theater)
-                <a href="{{route('theaters.destroy', ['theater' => $theater])}}">
-                    Delete
-                </a>
-                @endcan
-            </div>
-        </div>
-    
-    @endforeach
+    <div class="grid grid-cols-1 gap-4 my-6">
     @can('create', App\Models\Theater::class)
                 <div class="flex items-center gap-4 mb-4">
                     <x-button
-                        href="{{ route('theaters.create') }}"
+                        href="{{ route('theaters.create' ) }}"
                         text="Insert a new theater"
                         type="success"/>
                 </div>
     </div>
     @endcan
+    @foreach($theaters as $theater)
+
+        <div class="bg-gray-800 overflow-hidden -my-2 sm:rounded-lg flex">
+            <div class="p-6 sm:px-3 bg-gray-800  w-full flex">
+                <div class=" sm:px-10 bg-gray-800 border-gray-600 w-64 inline-block">
+                                <div class="flex justify-center">
+                                    @if($theater->photo_filename)
+                                        <img src="{{ $theater->getImageUrlAttribute() }}" alt="Profile Picture"
+                                            class="rounded-full h-32 w-32 object-cover">
+                                    @else
+                                        <div class="rounded-full h-32 w-32 bg-gray-700 flex items-center justify-center text-gray-300">
+                                            <span>{{ __('No Image') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                </div>
+                <div class=" sm:px-10 bg-gray-800 border-gray-600 w-full inline-block">
+                    <div class="w-full" >
+                        <x-input-label for="name" :value="__('Name')" />
+                        <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
+                                        :value="$theater->name" required autofocus autocomplete="name" disabled />
+                        <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                    </div>
+                    
+                    <div class="h-full justify-end rounded overflow-hidden bg-gray-80 flex">
+                        @can('update', $theater)
+                            <div class="mt-6 mx-6">
+                                <a href="#"
+                                    class="inline-block px-4 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition duration-200">
+                                    {{ __('Edit') }}
+                                </a>
+                            </div>
+                        @endcan
+                        @can('delete', $theater)
+                            <div class="mt-6">
+                                <a href="#"
+                                    class="inline-block px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-200">
+                                    {{ __('Delete') }}
+                                </a>
+                            </div>
+                        @endcan
+                    </div>
+                </div>
+
+
+            </div>
+            
+        </div>
+    
+    @endforeach
+
 </main>
 
 @endsection

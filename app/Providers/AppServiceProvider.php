@@ -36,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->type === 'C';
         });
 
+        Gate::define('use-cart', function (?User $user) {
+            return $user === null || $user->type === 'C';
+        });
+
         Gate::guessPolicyNamesUsing(function ($modelClass): string {
             return 'App\\Policies\\' . class_basename($modelClass) . 'Policy';
         });
