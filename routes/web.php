@@ -23,7 +23,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('customers', CustomerController::class);
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
-        Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');;
+        Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');
 });
 
 //Public routes

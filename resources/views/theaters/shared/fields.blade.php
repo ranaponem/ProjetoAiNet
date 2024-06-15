@@ -14,6 +14,7 @@
             name="image_file"
             label="Theater Image"
             width="md"
+            height=""
             :readonly="$readonly"
             deleteTitle="Delete Image"
             :deleteAllow="($mode == 'edit') && ($theater->getImageExistsAttribute())"

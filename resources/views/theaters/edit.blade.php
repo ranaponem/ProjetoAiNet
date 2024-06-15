@@ -15,7 +15,7 @@
         <x-button element="submit" type="dark" text="Save theater" class="uppercase"/>
     </div>
 </form>
-<form class="hidden" id="form_to_delete_photo"
+<form class="hidden" id="form_to_delete_image"
     method="POST" action="{{ route('theaters.photo.destroy', ['theater' => $theater]) }}">
     @csrf
     @method('DELETE')

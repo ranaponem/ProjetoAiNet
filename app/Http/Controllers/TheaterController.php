@@ -62,8 +62,26 @@ class TheaterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Theater $theater): RedirectResponse
+    public function update(TheaterFormRequest $request, Theater $theater): RedirectResponse
     {
+        $validatedData = $request->validated();
+        $theater = DB::transaction(function () use ($validatedData, $theater, $request) {
+            $theater->name = $validatedData['name'];
+            $theater->save();
+            if ($request->hasFile('image_file')) {
+                if (
+                    $theater->photo_filename &&
+                    Storage::fileExists('public/photos/' . $theater->photo_filename)
+                ) {
+                    Storage::delete('public/photos/' . $theater->photo_filename);
+                }
+                $path = $request->image_file->store('public/photos');
+                $theater->photo_filename = basename($path);
+                $theater->save();
+            }
+            return $theater;
+        });
+        
         return redirect()->route('theaters.index');
     }
 
