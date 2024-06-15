@@ -19,11 +19,17 @@
                 height=""
                 :readonly="$readonly"
                 deleteTitle="Delete Image"
-                :deleteAllow="($mode == 'edit') && ($user->getImageExistsAttribute())"
+                :deleteAllow="($mode == 'edit') && ($user->photo_filename)"
                 deleteForm="form_to_delete_image"
-                :imageUrl="$user->getImageUrlAttribute()"
+                :imageUrl="$user->photo_filename ? asset('storage/photos/' . $user->photo_filename) : 'storage/photos/475_666c4e5ed23f0.jpg'"
             />
         </div>
+    </form>
+
+    <form class="hidden" id="form_to_delete_image"
+          method="POST" action="{{ route('users.photo.destroy', ['user' => $user]) }}">
+        @csrf
+        @method('DELETE')
     </form>
 
     <!-- JavaScript to automatically submit the form when a new photo is selected -->
@@ -32,4 +38,17 @@
             document.getElementById('profile-form').submit();
         });
     </script>
+    <script>
+        // Function to submit delete form when delete button is clicked
+        function deletePhoto() {
+            document.getElementById('form_to_delete_image').submit();
+        }
+
+        // Listen for click on delete button
+        document.getElementById('delete-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            deletePhoto(); // Call delete function
+        });
+    </script>
+
 </section>
