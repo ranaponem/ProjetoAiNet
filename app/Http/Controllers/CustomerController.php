@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 use App\Models\Customer;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class CustomerController extends \Illuminate\Routing\Controller
+class CustomerController extends Controller
 {
     use AuthorizesRequests;
-    public function __construct()
-    {
-        $this->authorizeResource(Customer::class);
-    }
     /**
      * Display a listing of the resource.
      */
@@ -28,8 +24,7 @@ class CustomerController extends \Illuminate\Routing\Controller
      */
     public function create()
     {
-        //return the register view
-        return view('auth.register');
+        return view('customers.create');
     }
 
     /**
@@ -40,14 +35,14 @@ class CustomerController extends \Illuminate\Routing\Controller
         // Validate the request data
         $validatedData = $request->validate([
             'id' => 'required|numeric|unique:customers,id',
-            'nif' => 'required|string|size:9|unique:customers,nif', // NIF deve ser Ãºnico na tabela 'customers'
-            'payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
-            'payment_ref' => 'required|string|max:255',
+            'nif' => 'nullable|string|size:9|unique:customers,nif',
+            'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
+            'payment_ref' => 'nullable|string|max:255',
         ]);
 
         try {
             // Create a new Customer instance with the validated data
-            $customer = Customer::create($validatedData);
+            Customer::create($validatedData);
 
             // Redirect to the customer index page with a success message
             return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
@@ -70,6 +65,7 @@ class CustomerController extends \Illuminate\Routing\Controller
      */
     public function edit(Customer $customer): View
     {
+        $this->authorize('update', $customer); // Verifica se o usuário pode atualizar o cliente
         return view('customers.edit')->with('customer', $customer);
     }
 
@@ -80,23 +76,34 @@ class CustomerController extends \Illuminate\Routing\Controller
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'id' => 'integer|exists:customers,id', // Ensure id exists in the customers table
-            'nif' => 'string|size:9', // NIF should be exactly 9 characters
-            'payment_type' => 'in:VISA,PAYPAL,MBWAY', // Validate against the enum values
-            'payment_ref' => 'string|max:255', // Payment reference should be at most 255 characters
+            'nif' => 'nullable|string|size:9|unique:customers,nif,' . $customer->id,
+            'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
+            'payment_ref' => 'nullable|string|max:255',
         ]);
 
-        // Update the customer instance with the validated data
-        $customer->update($validatedData);
+        try {
+            // Update the customer instance with the validated data
+            $customer->update($validatedData);
 
-        // Redirect to the customer index page with a success message
-        return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
+            // Redirect to the profile edit page with a success message
+            return redirect()->route('profile.edit')->with('success', 'Customer updated successfully.');
+        } catch (\Exception $e) {
+            // Handle any exceptions (e.g., database errors)
+            return redirect()->back()->withInput()->with('error', 'Failed to update customer. ' . $e->getMessage());
+        }
     }
-        /**
+
+
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Customer $customer)
     {
-        //
+        try {
+            $customer->delete();
+            return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete customer. ' . $e->getMessage());
+        }
     }
 }

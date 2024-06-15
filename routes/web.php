@@ -23,6 +23,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('customers', CustomerController::class);
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
+
 });
 
 //Public routes

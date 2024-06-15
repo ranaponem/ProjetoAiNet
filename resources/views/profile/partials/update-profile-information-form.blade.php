@@ -49,14 +49,16 @@
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
-            @if($user->type==='C')
-                <a href="{{ route('customers.edit', ['customer' => $user->customer]) }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+
+            @if($user->type === 'C')
+                <a href="{{ route('customers.edit', ['customer' => $user->customer->id]) }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                     {{ __('Edit Payment Type') }}
                 </a>
             @endif
 
 
-            @if (session('status') === 'profile-updated')
+
+        @if (session('status') === 'profile-updated')
                 <p
                     x-data="{ show: true }"
                     x-show="show"

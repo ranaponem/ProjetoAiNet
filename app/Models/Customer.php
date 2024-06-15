@@ -13,6 +13,7 @@ class Customer extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'id',
         'nif',
         'payment_type',
         'payment_ref',
