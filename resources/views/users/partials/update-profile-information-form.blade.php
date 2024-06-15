@@ -2,6 +2,7 @@
     $mode = $mode ?? 'edit';
     $readonly = $mode == 'show';
 @endphp
+
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -17,19 +18,20 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('users.update', ['user' => $user->id]) }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('users.update', ['user' => $user->id]) }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('put')
+
         <div class="max-w-xl">
             <div>
                 <x-input-label for="name" :value="__('Name')" />
-                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" :disabled="$readonly" />
                 <x-input-error class="mt-2" :messages="$errors->get('name')" />
             </div>
 
             <div>
                 <x-input-label for="email" :value="__('Email')" />
-                <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+                <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" :disabled="$readonly" />
                 <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
                 @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -50,19 +52,6 @@
                     </div>
                 @endif
             </div>
-        </div>
-        <div class="max-w-xl">
-            <x-field.image
-                name="image_file"
-                label="User Image"
-                width="md"
-                height=""
-                :readonly="$readonly"
-                deleteTitle="Delete Image"
-                :deleteAllow="($mode == 'edit') && ($user->getImageExistsAttribute())"
-                deleteForm="form_to_delete_image"
-                :imageUrl="$user->getImageUrlAttribute()"
-            />
         </div>
 
         <div class="flex items-center gap-4">

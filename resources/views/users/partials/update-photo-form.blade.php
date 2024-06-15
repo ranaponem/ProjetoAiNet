@@ -7,7 +7,7 @@
     <header>
         <!-- Header content can be added here -->
     </header>
-    <form id="profile-form" method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+    <form id="profile-form" method="post" action="{{ route('users.update', ['user' => $user->id]) }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
         <div class="p-6 sm:px-10 bg-gray-800 w-96">

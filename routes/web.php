@@ -25,6 +25,8 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
         Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');
+        Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])->name('users.photo.destroy')->can('update', 'users');
+
         Route::resource('movies', MovieController::class)->except(['index, show']);
         Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
 });

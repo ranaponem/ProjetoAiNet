@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
 use App\Models\Movie;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -13,24 +14,52 @@ class MovieController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $movies = Movie::all();
-        return view('movies.index')
-            ->with('movies', $movies);
+        $query = Movie::query();
+        $genres = Genre::all();
+
+        if ($request->has('genre_code') && $request->genre_code) {
+            $query->where('genre_code', $request->genre_code);
+        }
+
+        if ($request->has('search') && $request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('synopsis', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $movies = $query->get();
+
+        return view('movies.index',compact('movies', 'genres'));
     }
 
-    public function indexOnShow(): View
+    public function indexOnShow(Request $request): View
     {
         $startDate = Carbon::today();
         $endDate = Carbon::today()->addDays(15);
 
-        $moviesOnShow = Movie::whereHas('screenings', function ($query) use ($startDate, $endDate) {
-            $query->whereBetween('date', [$startDate, $endDate]);
-        })->get();
+        $genres = Genre::all();
 
-        return view('movies.indexOnShow')
-            ->with('moviesOnShow', $moviesOnShow);
+        $query = Movie::whereHas('screenings', function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        });
+
+        if ($request->has('genre_code') && $request->genre_code) {
+            $query->where('genre_code', $request->genre_code);
+        }
+
+        if ($request->has('search') && $request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('synopsis', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $moviesOnShow = $query->get();
+
+        return view('movies.indexOnShow',compact('moviesOnShow', 'genres'));
     }
 
     /**
