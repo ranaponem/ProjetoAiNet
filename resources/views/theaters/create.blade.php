@@ -4,15 +4,6 @@
 
 @section('main')
 
-
-
-@endsection
-@extends('layouts.main')
-
-@section('header-title', 'Create new Theater')
-
-@section('main')
-
 <form method="POST" action="{{ route('theaters.store') }}"
     enctype="multipart/form-data">
     @csrf
