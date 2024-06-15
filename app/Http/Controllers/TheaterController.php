@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TheaterFormRequest;
 use App\Models\Theater;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TheaterController extends Controller
 {
@@ -33,11 +35,18 @@ class TheaterController extends Controller
      */
     public function store(TheaterFormRequest $request): RedirectResponse
     {
-        $newTheater = Theater::create($request->validated());
-
-        if ($request->hasFile('image_file')) {
-            $request->image_file->storeAs('public/theaters', $newTheater->photo_filename);
-        }
+        $validatedData = $request->validated();
+        $newTheater = DB::transaction(function () use ($validatedData, $request) {
+            $newTheater = new Theater();
+            $newTheater->name = $validatedData['name'];
+            $newTheater->save();
+            if ($request->hasFile('image_file')) {
+                $path = $request->image_file->store('public/photos');
+                $newTheater->photo_filename = basename($path);
+                $newTheater->save();
+            }
+            return $newTheater;
+        });
         return redirect()->route('theaters.index');  
     }
 
