@@ -32,8 +32,7 @@ class CartConfirmationFormRequest extends FormRequest
         return [
             function (Validator $validator) {
                 if ($this->user()) {
-                    if ($this->user()->type == 'S') {
-                        // When the user is a student, the student_number must be his number
+                    if ($this->user()->type == 'C') {
                         $userStudentNumber = $this->user()?->student?->number;
                         if ($this->student_number != $userStudentNumber) {
                             $validator->errors()->add('student_number', "Your student number is $userStudentNumber");

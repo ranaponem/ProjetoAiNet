@@ -22,7 +22,7 @@
                     
                     <h1 class="font-bold text-3xl text-black dark:text-gray-50 mb-8">Synopsis:</h1>
                     <p class="font-bold text-xl text-black dark:text-gray-50">{{ $movie->synopsis }}</p>
-                    <p class="font-bold mt-8 text-xl text-black dark:text-gray-50">Genre: {{ $movie->genre_code }}</p>
+                    <p class="font-bold mt-8 text-xl text-black dark:text-gray-50">Genre: {{ $movie->genre ? $movie->genre->name : 'No genre available' }}</p>
                     <p class="font-bold text-xl text-black dark:text-gray-50">Year: {{ $movie->year }}</p>
 
                 </div> 

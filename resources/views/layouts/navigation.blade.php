@@ -45,10 +45,12 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        @if(Auth::user()->type === 'C')
-                        <x-dropdown-link href="#">
-                            {{ __('My Cart') }}
-                        </x-dropdown-link>
+                        @if(Auth::user()->type === 'C' && session('cart'))
+                            @can('use-cart')
+                                <x-dropdown-link :href="route('cart.show')">
+                                    {{ __('My Cart') }}
+                                </x-dropdown-link>
+                            @endcan
                         @endif
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

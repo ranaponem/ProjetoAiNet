@@ -13,7 +13,6 @@ class Genre extends Model
 
     public $timestamps = false;
     public $incrementing = false;
-    protected $keyType = 'string';
     protected $primaryKey = 'code';
     protected $fillable = [
         'code',
