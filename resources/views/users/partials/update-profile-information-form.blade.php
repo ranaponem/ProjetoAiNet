@@ -82,5 +82,4 @@
             @endif
         </div>
     </form>
-    </div>
 </section>
