@@ -55,7 +55,7 @@ class TheaterController extends Controller
      */
     public function show(Theater $theater)
     {
-        return view('theaters.show')->with('theater', $theater);
+        //return view('theaters.show')->with('theater', $theater);
     }
 
     /**

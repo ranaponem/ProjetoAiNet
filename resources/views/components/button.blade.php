@@ -47,6 +47,7 @@
                         active:bg-slate-200 dark:active:bg-slate-700',
         'link' => 'text-blue-500
                         border-gray-200',
+        'delete' => 'text-white bg-red-600 hover:bg-red-700',
         default => 'text-white dark:text-gray-900
                         bg-gray-800 dark:bg-gray-200
                         hover:bg-gray-900 dark:hover:bg-gray-100

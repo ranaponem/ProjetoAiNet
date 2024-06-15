@@ -50,10 +50,13 @@
                         @endcan
                         @can('delete', $theater)
                             <div class="mt-6">
-                                <a href="#"
-                                    class="inline-block px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-200">
-                                    {{ __('Delete') }}
-                                </a>
+                                <form action="{{ route('theaters.destroy', ['theater' => $theater]) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this theater?') }}');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-block px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-200">
+                                        {{ __('Delete') }}
+                                    </button>
+                                </form>
                             </div>
                         @endcan
                     </div>
