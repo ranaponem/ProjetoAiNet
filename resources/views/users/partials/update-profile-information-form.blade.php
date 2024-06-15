@@ -1,5 +1,8 @@
+@php
+    $mode = $mode ?? 'edit';
+    $readonly = $mode == 'show';
+@endphp
 <section>
-
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('Profile Information') }}
@@ -54,9 +57,9 @@
                 label="User Image"
                 width="md"
                 height=""
-                :readonly="true"
+                :readonly="$readonly"
                 deleteTitle="Delete Image"
-                :deleteAllow="($user->getImageExistsAttribute())"
+                :deleteAllow="($mode == 'edit') && ($user->getImageExistsAttribute())"
                 deleteForm="form_to_delete_image"
                 :imageUrl="$user->getImageUrlAttribute()"
             />
