@@ -39,13 +39,13 @@
 
                             <div>
                                 <x-input-label for="payment_ref Reference" :value="__('Payment Reference')" />
-                                <x-text-input id="payment_ref" name="payment_ref" type="text" class="mt-1 block w-full" :value="old('payment_ref', $customer->payment_ref)" required  autocomplete="payment_ref" />
+                                <x-text-input id="payment_ref" name="payment_ref" type="text" class="mt-1 block w-full" :value="old('payment_ref', $customer->payment_ref)"  autocomplete="payment_ref" />
                                 <x-input-error class="mt-2" :messages="$errors->get('payment_ref')" />
                             </div>
                             <div>
 
                                 <x-input-label for="nif" :value="__('NIF')" />
-                                <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="old('nif', $customer->nif)" required  autocomplete="nif" />
+                                <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="old('nif', $customer->nif)"  autocomplete="nif" />
                                 <x-input-error class="mt-2" :messages="$errors->get('nif')" />
                             </div>
 

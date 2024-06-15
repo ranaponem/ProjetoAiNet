@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -55,24 +56,29 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        // Validate the request data
+        $this->authorize('update', $user); // Garante que o usuário tem permissão para atualizar
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'type' => 'required|in:A,E,C', // Assuming A = Admin, E = Employee, C = Customer
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
         ]);
 
         try {
-            // Update the user instance with the validated data
-            $user->update($validatedData);
-
-            // Redirect to the user index page with a success message
-            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+            $user->update($validatedData); // Atualiza o usuário específico
+            return redirect()->route('profile.index');
         } catch (\Exception $e) {
-            // Handle any exceptions (e.g., database errors)
-            return redirect()->back()->withInput()->with('error', 'Failed to update user. ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Failed to update profile. ' . $e->getMessage());
         }
     }
+
+
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -80,6 +86,10 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+            $customer= $user->customer;
+            if ($customer) {
+                $customer->delete();
+            }
             $user->delete();
             return redirect()->route('users.index')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
