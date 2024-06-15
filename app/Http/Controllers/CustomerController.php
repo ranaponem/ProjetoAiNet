@@ -65,7 +65,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer): View
     {
-        $this->authorize('update', $customer); // Verifica se o usuário pode atualizar o cliente
+        $this->authorize('update', $customer); // Verifica se o utilizador pode atualizar o cliente
         return view('customers.edit')->with('customer', $customer);
     }
 

@@ -75,15 +75,15 @@
                                         {{ __('Edit') }}
                                     </a>
                                 </div>
-                                
+
                                 <div class="mt-6 inline-block ml-2">
-                                    <a href="#"
+                                    <a href="{{ route('users.destroy', $user->id) }}"
                                         class="inline-block px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-200">
                                         {{ __('Delete') }}
                                     </a>
                                 </div>
                             </div>
-                        
+
                         </div>
 
                         <div class="p-6 sm:px-10 bg-gray-800 border-b border-gray-600 w-64">
