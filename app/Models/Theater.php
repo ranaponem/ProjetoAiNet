@@ -23,6 +23,16 @@ class Theater extends Model
         return Storage::exists("public/photos/{$this->photo_filename}");
     }
 
+    public function getImageUrlAttribute()
+    {
+        if ($this->imageExists) {
+            return asset("storage/photos/{$this->photo_filename}");
+        }
+        else{
+            return asset("storage/posters/_no_poster_1.png");
+        }
+    }
+
     public function seats(): HasMany{
         return $this->hasMany(Seat::class);
     }
