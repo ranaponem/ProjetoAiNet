@@ -8,7 +8,7 @@
 
 <main>
     <div class="flex flex-wrap justify-center">
-    @foreach($movies as $movie)
+    @foreach($moviesOnShow as $movie)
     
         <div class="w-full md:w-1/2 lg:w-1/5 p-2">
             <a href="{{ route('movies.show', ['movie' => $movie]) }}">

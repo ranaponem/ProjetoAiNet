@@ -4,9 +4,12 @@ namespace App\Policies;
 
 use App\Models\Theater;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TheaterPolicy
 {
+    use HandlesAuthorization;
+
     public function before(User $user): ?bool
     {
         if ($user->type === 'A') {
