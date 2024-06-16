@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
@@ -30,6 +31,9 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
             ->middleware('can:destroyPhoto,user');
+
+        Route::get('/configuration', [ConfigurationController::class, 'edit'])->name('configuration.edit');
+        Route::patch('/configuration/{configuration}', [ConfigurationController::class, 'update'])->name('configuration.update');
 
         Route::resource('movies', MovieController::class)->except(['index, show']);
         Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
