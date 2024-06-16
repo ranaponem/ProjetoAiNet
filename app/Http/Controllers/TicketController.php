@@ -24,7 +24,7 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Request $request): View
     {
         // Retrieve screening based on the request
         $screening = Screening::findOrFail($request->screening);
@@ -96,5 +96,10 @@ class TicketController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function validate(Screening $screening): View
+    {
+        return view('tickets.validate')->with('screening', $screening);
     }
 }

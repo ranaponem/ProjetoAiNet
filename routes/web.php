@@ -12,6 +12,8 @@ use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Movie;
+use App\Models\Theater;
+use App\Models\Ticket;
 use Illuminate\Support\Facades\Route;
 
 //Not verified users
@@ -27,10 +29,15 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
         Route::resource('customers', CustomerController::class);
         Route::resource('screenings',ScreeningController::class);
-        Route::resource('users', UserController::class);
-        Route::resource('theaters', TheaterController::class);
+        Route::middleware('can:viewAny,\App\Model\User')->group(function(){
+            Route::resource('users', UserController::class);
+        });
+        Route::middleware('can:viewAny,\App\Model\Theater')->group(function(){
+            Route::resource('theaters', TheaterController::class);
+            Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy');
+        });
         Route::resource('tickets',TicketController::class);
-        Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');
+        Route::get('tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate')->can('validate', Ticket::class);
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
             ->middleware('can:destroyPhoto,user');
@@ -38,7 +45,10 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/configuration', [ConfigurationController::class, 'edit'])->name('configuration.edit');
         Route::patch('/configuration', [ConfigurationController::class, 'update'])->name('configuration.update');
 
-        Route::resource('movies', MovieController::class)->except(['index, show']);
+        Route::middleware('can:viewAny,\App\Model\Movie')->group(function(){
+            Route::resource('movies', MovieController::class)->except(['index, show']);
+        });
+        
         Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
         Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
         Route::get('cart', [CartController::class, 'show'])->name('cart.show');
