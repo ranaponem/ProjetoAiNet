@@ -3,33 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
+    use AuthorizesRequests;
+
+    public function show(Purchase $purchase)
+    {
+        // Ensure the purchase belongs to the authenticated user
+        $this->authorize('view', $purchase);
+
+        // Load the related tickets
+        $purchase->load('tickets');
+
+        return view('purchases.show', compact('purchase'));
+    }
+
     public function index()
     {
-        // Fetch all purchases
-        $purchases = Purchase::orderBy('created_at', 'desc')->get();
+        // Fetch all purchases ordered by the latest
+        if(auth()->user()->type==='A'){
+            $purchases = Purchase::orderBy('created_at', 'desc')->get();
+        }else{
+            $user = auth()->user();
+            $purchases = Purchase::where('customer_id', $user->customer->id)->orderBy('created_at', 'desc')->get();
+        }
 
         return view('purchases.index', compact('purchases'));
     }
 
-    public function create(Request $request)
-    {
-        $tickets = $request->session()->get('cart');
-
-        // Calculate total price
-        $total = 0;
-        foreach ($tickets as $item) {
-            $total += $item['price'];
-        }
-
-        return view('purchases.create', compact('tickets', 'total'));
-    }
-
     public function store(Request $request)
     {
+
+
         // Validate the incoming request
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
@@ -37,11 +45,13 @@ class PurchaseController extends Controller
             'total_price' => 'required|numeric|min:0',
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
-            'nif' => 'nullable|string|max:20',
-            'payment_type' => 'required|string|max:50',
-            'payment_ref' => 'required|string|max:100',
+            'nif' => 'nullable|string|size:9',
+            'payment_type' => 'nullable|in:VISA,PAYPAL,MBWAY',
+            'payment_ref' => 'required|string|max:255',
             'receipt_pdf' => 'nullable|file|mimes:pdf|max:2048',
         ]);
+
+        $cart = json_decode($request->input('cart'), true);
 
         // Create a new Purchase instance
         $purchase = Purchase::create([
@@ -53,21 +63,14 @@ class PurchaseController extends Controller
             'nif' => $validated['nif'],
             'payment_type' => $validated['payment_type'],
             'payment_ref' => $validated['payment_ref'],
-            'receipt_pdf_filename' => $filename,
         ]);
+
+        // Create tickets associated with this purchase
+        $purchase->createTicketsFromCart($cart);
+
+        session()->forget('cart');
 
         // Redirect back or to a confirmation page
         return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
     }
-
-    public function show($id)
-    {
-        // Fetch a single purchase by ID
-        $purchase = Purchase::findOrFail($id);
-
-        return view('purchases.show', compact('purchase'));
-    }
-
-    // Other methods like edit, update, delete can be added based on your application needs
 }
-

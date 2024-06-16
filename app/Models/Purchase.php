@@ -30,4 +30,20 @@ class Purchase extends Model
     public function tickets(): HasMany{
         return $this->hasMany(Ticket::class);
     }
+
+    // Method to create tickets from cart items
+    public function createTicketsFromCart($cart)
+    {
+        foreach ($cart as $item) {
+            // Assuming you have a Ticket model and its relationship correctly defined
+            $ticket = $this->tickets()->create([
+                'screening_id' => $item['screening_id'],
+                'seat_id' => $item['seat_id'],
+                'price' => $item['price'],
+            ]);
+
+            // Perform any additional operations related to tickets if needed
+            // For example, sending notifications, updating seat availability, etc.
+        }
+    }
 }
