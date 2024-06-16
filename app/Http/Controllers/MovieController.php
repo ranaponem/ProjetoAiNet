@@ -81,17 +81,77 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Movie $movie): View
+
+
+    public function show(int $movieId, Request $request): View
+    {
+        // Retrieve the movie by its ID
+        $movie = Movie::findOrFail($movieId);
+
+        // Determine which filter is applied (default to 0 if not provided)
+        $filter = $request->input('filter', 0);
+
+        // Initialize variables for screenings and date range
+        $screenings = collect();
+        $startDate = Carbon::today();
+        $endDate = $startDate->copy()->addWeeks(2);
+
+        // Determine the date range based on the filter
+        switch ($filter) {
+            case 0:
+                // Filter 0: Show screenings for today
+                $screenings = $this->getScreeningsForDate($movie, $startDate);
+                break;
+            case 1:
+                // Filter 1: Show screenings for the next two weeks
+                $screenings = $this->getScreeningsForDateRange($movie, $startDate, $endDate);
+                break;
+            default:
+                // Invalid filter, default to showing today's screenings
+                $screenings = $this->getScreeningsForDateRange($movie, $startDate, $endDate);
+                break;
+        }
+
+        return view('movies.show', compact('movie', 'screenings', 'filter'));
+    }
+
+    /**
+     * Retrieve screenings for a specific date.
+     *
+     * @param  Movie  $movie
+     * @param  Carbon  $date
+     * @return mixed
+     */
+    private function getScreeningsForDate(Movie $movie, Carbon $date)
     {
         $now = Carbon::now();
         $fiveMinutesAgo = $now->copy()->subMinutes(5);
-        $screenings = $movie->screenings()
-                            ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', start_time), '%Y-%m-%d %H:%i:%s') >= ?", [$fiveMinutesAgo])
-                            ->get();
 
-        return view('movies.show')
-            ->with('movie', $movie)->with('screenings', $screenings)->with('time', $now);
+        return $movie->screenings()
+            ->whereDate('date', $date->toDateString())
+            ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', start_time), '%Y-%m-%d %H:%i:%s') >= ?", [$fiveMinutesAgo])
+            ->get();
     }
+
+    /**
+     * Retrieve screenings for a date range.
+     *
+     * @param  Movie  $movie
+     * @param  Carbon  $startDate
+     * @param  Carbon  $endDate
+     * @return mixed
+     */
+    private function getScreeningsForDateRange(Movie $movie, Carbon $startDate, Carbon $endDate)
+    {
+        $now = Carbon::now();
+        $fiveMinutesAgo = $now->copy()->subMinutes(5);
+
+        return $movie->screenings()
+            ->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])
+            ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', start_time), '%Y-%m-%d %H:%i:%s') >= ?", [$fiveMinutesAgo])
+            ->get();
+    }
+
 
     /**
      * Show the form for editing the specified resource.

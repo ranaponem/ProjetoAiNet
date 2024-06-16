@@ -41,7 +41,7 @@
                                         @if(request('genre_code')==null)
                                             <div>Select Timeframe</div>
                                         @else
-                                            <div>{{request('screening.date')}}</div>
+                                            <div>{{request('filter')}}</div>
                                         @endif
                                         <div class="ms-1">
                                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -51,10 +51,10 @@
                                     </button>
                                 </x-slot>
                                     <x-slot name="content" >
-                                        <x-dropdown-link href="{{ route('movies.show', ['movie' => $movie, 'screening.date' => null ]) }}">
+                                        <x-dropdown-link href="{{ route('movies.show', ['movie' => $movie, 'filter' => '1' ]) }}">
                                             {{ __('Next Two weeks') }}
                                         </x-dropdown-link>
-                                        <x-dropdown-link href="{{ route('movies.show', ['movie' => $movie,'screening.date' => date('Y-m-d')])}}">
+                                        <x-dropdown-link href="{{ route('movies.show', ['movie' => $movie,'filter' => '0']) }}">
                                             {{ __('Today') }}
                                         </x-dropdown-link>
                                     </x-slot>
