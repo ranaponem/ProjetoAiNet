@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
@@ -106,6 +107,8 @@ class MovieController extends Controller
                 // Filter 1: Show screenings for the next two weeks
                 $screenings = $this->getScreeningsForDateRange($movie, $startDate, $endDate);
                 break;
+            case 2:
+                $screenings = $movie->screenings;
             default:
                 // Invalid filter, default to showing today's screenings
                 $screenings = $this->getScreeningsForDateRange($movie, $startDate, $endDate);
