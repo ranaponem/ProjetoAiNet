@@ -6,6 +6,7 @@ use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
@@ -42,6 +43,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
         Route::get('cart', [CartController::class, 'show'])->name('cart.show');
         Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+        Route::resource('purchases', PurchaseController::class);
 });
 
 //Public routes
