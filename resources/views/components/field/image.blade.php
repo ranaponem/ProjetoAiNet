@@ -39,21 +39,21 @@
 @endphp
 <div {{ $attributes }}>
     <div class="flex-col">
-        <div class="block font-medium text-sm text-gray-700 dark:text-gray-300 mt-6">
+        <div class="block font-medium text-sm text-gray-700 dark:text-gray-300 mt-6 mb-1">
             {{ $label }}
         </div>
-        <img class="{{$widthClass}} {{$maxHeightClass}} aspect-auto"
+        <img class="{{$widthClass}} {{$maxHeightClass}} aspect-auto rounded"
              src="{{ $imageUrl }}">
         @if(!$readonly)
-        <div class="{{$widthClass}} flex-col space-y-4 items-stretch mt-4">
-            <div>
-                <div class="flex flex-row items-center">
-                    <input id="id_{{ $name }}" name="{{ $name }}" type="file"
-                        accept="image/png, image/jpeg"
-                        onchange="document.getElementById('id_{{ $name }}_selected_file').innerHTML= document.getElementById('id_{{ $name }}').files[0].name ?? ''"
-                        class="hidden"/>
+            <div class="{{$widthClass}} flex-col space-y-4 items-stretch mt-4 ">
+                <div class="flex  justify-center">
+                    <div class="flex flex-row items-center inline-block">
+                        <input id="id_{{ $name }}" name="{{ $name }}" type="file"
+                               accept="image/png, image/jpeg"
+                               onchange="document.getElementById('id_{{ $name }}_selected_file').innerHTML= document.getElementById('id_{{ $name }}').files[0].name ?? ''"
+                               class="hidden"/>
                         <label for="id_{{ $name }}"
-                            class="min-w-32
+                               class="min-w-32
                             px-4 py-2 mr-2 inline-block border border-transparent
                             rounded-md
                             font-medium text-sm tracking-widest
@@ -68,25 +68,29 @@
                             cursor-pointer"
                         >Choose file</label>
                         <label id="id_{{ $name }}_selected_file"
-                            class="text-sm text-slate-500 truncate"></label>
+                               class="text-sm text-slate-500 truncate"></label>
+
                     </div>
-                @error( $name )
+                    @if($deleteAllow)
+                        <div class="flex flex-row items-center inline-block text-xs ">
+                            <x-button
+                                element="submit"
+                                :text="$deleteTitle"
+                                type="danger"
+                                form="{{ $deleteForm }}"
+
+                            />
+
+                        </div>
+                    @endif
+                    @error( $name )
                     <div class="text-sm text-red-500">
                         {{ $message }}
                     </div>
-                @enderror
+                    @enderror
+                </div>
+
             </div>
-            @if($deleteAllow)
-            <div>
-                <x-button
-                    element="submit"
-                    :text="$deleteTitle"
-                    type="danger"
-                    form="{{ $deleteForm }}"
-                    />
-            </div>
-            @endif
-        </div>
         @endif
     </div>
 </div>

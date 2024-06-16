@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UserController;
 use App\Models\Movie;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth', 'verified')->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
         Route::resource('customers', CustomerController::class);
+        Route::resource('screenings',ScreeningController::class);
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
         Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');

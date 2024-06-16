@@ -57,48 +57,53 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ProfileUpdateRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $this->authorize('update', $user);
+        $validatedData = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:users,email,' . $user->id,
+            'type' => 'nullable|string|in:A,C,E', // Assuming 'A', 'C', and 'E' are valid types
+            'blocked' => 'nullable|boolean',
+            'image_file' => 'nullable|image|max:10048', // Adjust the max size as needed
+        ]);
 
-        // Validate the request data including the file upload
-        $validatedData = $request->validated();
-
-        try {
-            // Update user's name and email
-            $user->fill([
-                'name' => $validatedData['name'] ?? $user->name,
-                'email' => $validatedData['email'] ?? $user->email,
-            ]);
-
-            // Check if the email has changed
-            if ($user->isDirty('email')) {
-                $user->email_verified_at = null; // Reset email verification status
-            }
-
-            // Handle image upload
-            if ($request->hasFile('photo_filename')) {
-                // Delete old image if exists
-                if ($user->photo_filename && Storage::exists('public/photos/' . $user->photo_filename)) {
-                    Storage::delete('public/photos/' . $user->photo_filename);
-                }
-
-                // Store new image
-                $path = $request->file('photo_filename')->store('public/photos');
-                $user->photo_filename = basename($path);
-            }
-
-            // Save the user model
-            $user->save();
-
-            return redirect()->route('profile.edit')->with('status', 'Profile updated successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Failed to update profile. ' . $e->getMessage());
+        if ($request->has('email') && $request->input('email') !== $user->email) {
+            $user->email_verified_at = null; // Reset email verification status
         }
+
+        // Update other fields if they exist in the validated data
+        if (isset($validatedData['name'])) {
+            $user->name = $validatedData['name'];
+        }
+        if (isset($validatedData['email'])) {
+            $user->email = $validatedData['email'];
+        }
+        if (isset($validatedData['type'])) {
+            $user->type = $validatedData['type'];
+        }
+        if (isset($validatedData['blocked'])) {
+            $user->blocked = $validatedData['blocked'];
+        }
+
+        // Handle file upload for the profile photo
+        if ($request->hasFile('image_file')) {
+            // Delete old image if exists
+            if ($user->photo_filename && Storage::exists('public/photos/' . $user->photo_filename)) {
+                Storage::delete('public/photos/' . $user->photo_filename);
+            }
+
+            // Store new image
+            $path = $request->file('image_file')->store('public/photos');
+            $user->photo_filename = basename($path);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.edit', ['user' => $user->id])->with('status', 'profile-updated');
     }
+
+
+
     /**
      * Remove the specified resource from storage.
      */

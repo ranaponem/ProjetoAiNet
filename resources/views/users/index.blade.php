@@ -26,19 +26,19 @@
 
             <div class="flex justify-center space-x-4 mt-6">
                 <a href="{{ route('users.index') }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-900 transition duration-200 {{ request('type') == null ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
-                    {{ __('Todos') }}
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == null ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                    {{ __('All') }}
                 </a>
                 <a href="{{ route('users.index', ['type' => 'A']) }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-900 transition duration-200 {{ request('type') == 'A' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'A' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
                     {{ __('Admins') }}
                 </a>
                 <a href="{{ route('users.index', ['type' => 'E']) }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-900 transition duration-200 {{ request('type') == 'E' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'E' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
                     {{ __('Employees') }}
                 </a>
                 <a href="{{ route('users.index', ['type' => 'C']) }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-900 transition duration-200 {{ request('type') == 'C' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'C' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
                     {{ __('Customers') }}
                 </a>
             </div>
@@ -71,17 +71,18 @@
 
                                 <div class="mt-6 inline-block mr-2">
                                     <a href="{{ route('users.edit', $user->id) }}"
-                                    class="inline-block px-4 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition duration-200">
+                                       class="inline-block px-4 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700 transition duration-200">
                                         {{ __('Edit') }}
                                     </a>
                                 </div>
-
-                                <div class="mt-6 inline-block ml-2">
-                                    <a href="{{ route('users.destroy', $user->id) }}"
-                                        class="inline-block px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-200">
-                                        {{ __('Delete') }}
-                                    </a>
-                                </div>
+                                @if( $user->id !== auth()->id())
+                                    <div class="mt-6 inline-block ml-2">
+                                        <x-danger-button class="py-3"
+                                                         x-data=""
+                                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+                                        >{{ __('Delete Account') }}</x-danger-button>
+                                    </div>
+                                @endif
                             </div>
 
                         </div>
@@ -103,4 +104,29 @@
             </div>
         </div>
     </div>
+
+    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+        <form method="post" action="{{ route('users.destroy', $user) }}" class="p-6">
+            @csrf
+            @method('delete')
+
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                {{ __('Are you sure you want to delete this account?') }}
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {{ __('Once this account is deleted, all of its resources and data will be permanently deleted.') }}
+            </p>
+
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button x-on:click="$dispatch('close')">
+                    {{ __('Cancel') }}
+                </x-secondary-button>
+
+                <x-danger-button class="ms-3">
+                    {{ __('Delete Account') }}
+                </x-danger-button>
+            </div>
+        </form>
+    </x-modal>
 </x-app-layout>

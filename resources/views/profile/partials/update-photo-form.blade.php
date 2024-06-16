@@ -18,7 +18,7 @@
                 width="md"
                 height=""
                 :readonly="$readonly"
-                deleteTitle="Delete Image"
+                deleteTitle="Delete"
                 :deleteAllow="($mode == 'edit') && ($user->getImageExistsAttribute())"
                 deleteForm="form_to_delete_image"
                 :imageUrl="$user->getImageUrlAttribute()"

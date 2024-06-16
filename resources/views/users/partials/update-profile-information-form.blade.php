@@ -52,6 +52,16 @@
                     </div>
                 @endif
             </div>
+
+
+            <div>
+                <x-input-label for="blocked" :value="__('Blocked')" />
+                <select id="blocked" name="blocked" class="mt-1 block w-full" :disabled="$readonly">
+                    <option value="1" {{ old('blocked', $user->blocked) == 1 ? 'selected' : '' }}>Yes</option>
+                    <option value="0" {{ old('blocked', $user->blocked) == 0 ? 'selected' : '' }}>No</option>
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('blocked')" />
+            </div>
         </div>
 
         <div class="flex items-center gap-4">

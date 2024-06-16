@@ -18,10 +18,10 @@
                 width="md"
                 height=""
                 :readonly="$readonly"
-                deleteTitle="Delete Image"
+                deleteTitle="Delete"
                 :deleteAllow="($mode == 'edit') && ($user->photo_filename)"
                 deleteForm="form_to_delete_image"
-                :imageUrl="$user->photo_filename ? asset('storage/photos/' . $user->photo_filename) : 'storage/photos/475_666c4e5ed23f0.jpg'"
+                :imageUrl="$user->getImageUrlAttribute()"
             />
         </div>
     </form>
