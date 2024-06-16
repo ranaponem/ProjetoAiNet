@@ -48,18 +48,18 @@
                     </div>
 
                     <!-- Movie Poster -->
-                    <div class="mt-6">
-                        <label for="poster_filename" class="block font-medium text-gray-700">Poster</label>
-                        <input type="file" name="poster_filename" id="poster_filename" accept="image/*"
-                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        @error('poster_filename')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                        @if ($movie->poster_filename)
-                            <div class="mt-2">
-                                <img src="{{ asset('storage/posters/' . $movie->poster_filename) }}" alt="Movie Poster" class="h-40 rounded-lg">
-                            </div>
-                        @endif
+                    <div class="grow mt-9 space-y-4 inline-block pb-4">
+                        <x-field.image
+                            id="poster_filename"
+                            name="poster_filename"
+                            label="Movie Picture"
+                            width="md"
+                            height=""
+                            deleteTitle="Delete"
+                            :deleteAllow="$movie->getImageExistsAttribute()"
+                            deleteForm="form_to_delete_image"
+                            :imageUrl="$movie->getImageUrlAttribute()"
+                        />
                     </div>
 
                     <!-- Movie Year -->
@@ -90,6 +90,18 @@
                         </button>
                     </div>
                 </form>
+
+                <!-- Delete Button -->
+                <div class="mt-6">
+                    <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="inline-block px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 transition duration-200">
+                            Delete Movie
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

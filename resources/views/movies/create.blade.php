@@ -48,9 +48,9 @@
                     <!-- Movie Poster -->
                     <div class="grow mt-9 space-y-4 inline-block pb-4">
                         <x-field.image
-                            id="image_file"
-                            name="image_file"
-                            label="Theater Picture"
+                            id="poster_filename"
+                            name="poster_filename"
+                            label="Movie Picture"
                             width="md"
                             height=""
                             deleteTitle="Delete"

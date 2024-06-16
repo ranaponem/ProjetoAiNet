@@ -241,12 +241,22 @@ class MovieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Movie $movie)
+    public function destroy(Movie $movie): RedirectResponse
     {
-        foreach($movie->screenings() as $screening){
+        // Delete associated screenings first (assuming a one-to-many relationship)
+        foreach ($movie->screenings as $screening) {
             $screening->delete();
         }
+
+        // Delete the movie's poster file if it exists
+        if ($movie->poster_filename) {
+            Storage::delete('public/posters/' . $movie->poster_filename);
+        }
+
+        // Delete the movie record from the database
         $movie->delete();
-        return redirect()->route('movies.index');
+
+        // Redirect back to the index page with success message
+        return redirect()->route('movies.index')->with('success', 'Movie deleted successfully!');
     }
 }
