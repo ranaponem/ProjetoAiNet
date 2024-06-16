@@ -2,156 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CartConfirmationFormRequest;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
-use App\Models\Discipline;
-use App\Models\Student;
-use App\Models\Ticket;
+use App\Models\Ticket; // Assuming Ticket model represents movie tickets
 
 class CartController extends Controller
 {
-    public function show(): View
+
+    public function show()
     {
-        $cart = session('cart', null);
+        $cart = session('cart', []);
+
         return view('cart.show', compact('cart'));
     }
 
-    public function addToCart(Request $request, Ticket $ticket): RedirectResponse
+    public function addToCart(Request $request)
     {
-        $cart = session('cart', null);
-        if (!$cart) {
-            $cart = collect([$ticket]);
-            $request->session()->put('cart', $cart);
-        } else {
-            if ($cart->firstWhere('id', $ticket->id)) {
-                $alertType = 'warning';
-                $url = route('tickets.show', ['ticket' => $ticket]);
-                $htmlMessage = "Ticket <a href='$url'>#{$ticket->id}</a>
-                <strong>\"{$ticket->name}\"</strong> was not added to the cart because it is already there!";
-                return back()
-                    ->with('alert-msg', $htmlMessage)
-                    ->with('alert-type', $alertType);
-            } else {
-                $cart->push($ticket);
+        // Fetch screening, seat, and price information from the form submission
+        $screening_id = $request->input('screening_id');
+        $seat_id = $request->input('seat_id');
+        $price = $request->input('price');
+
+        // Check if the same ticket (screening_id and seat_id combination) already exists in cart
+        $cart = $request->session()->get('cart', []);
+        foreach ($cart as $item) {
+            if ($item['screening_id'] === $screening_id && $item['seat_id'] === $seat_id) {
+                // Redirect back with error message if ticket already exists in cart
+                return redirect()->back()->with('error', 'This ticket is already in your cart.');
             }
         }
-        $alertType = 'success';
-        $url = route('disciplines.show', ['discipline' => $ticket]);
-        $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
-                <strong>\"{$ticket->name}\"</strong> was added to the cart.";
-        return back()
-            ->with('alert-msg', $htmlMessage)
-            ->with('alert-type', $alertType);
+
+        // Construct the cart item
+        $cartItem = [
+            'screening_id' => $screening_id,
+            'seat_id' => $seat_id,
+            'price' => $price,
+        ];
+
+        // Add the new cart item to the cart array
+        $cart[] = $cartItem;
+
+        // Store the updated cart back into session
+        $request->session()->put('cart', $cart);
+
+        // Redirect back to the previous page or a confirmation page
+        return redirect()->route('movies.indexOnShow');
     }
 
-    public function removeFromCart(Request $request, Ticket $ticket): RedirectResponse
+    public function removeFromCart(Request $request)
     {
-        $url = route('disciplines.show', ['discipline' => $ticket]);
-        $cart = session('cart', null);
-        if (!$cart) {
-            $alertType = 'warning';
-            $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
-                <strong>\"{$ticket->name}\"</strong> was not removed from the cart because cart is empty!";
-            return back()
-                ->with('alert-msg', $htmlMessage)
-                ->with('alert-type', $alertType);
-        } else {
-            $element = $cart->firstWhere('id', $ticket->id);
-            if ($element) {
-                $cart->forget($cart->search($element));
-                if ($cart->count() == 0) {
-                    $request->session()->forget('cart');
-                }
-                $alertType = 'success';
-                $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
-                <strong>\"{$ticket->name}\"</strong> was removed from the cart.";
-                return back()
-                    ->with('alert-msg', $htmlMessage)
-                    ->with('alert-type', $alertType);
-            } else {
-                $alertType = 'warning';
-                $htmlMessage = "Discipline <a href='$url'>#{$ticket->id}</a>
-                <strong>\"{$ticket->name}\"</strong> was not removed from the cart because cart does not include it!";
-                return back()
-                    ->with('alert-msg', $htmlMessage)
-                    ->with('alert-type', $alertType);
+        $screening_id = $request->input('screening_id');
+        $seat_id = $request->input('seat_id');
+
+        // Retrieve cart from session
+        $cart = session()->get('cart', []);
+
+        // Loop through cart to find and remove item
+        foreach ($cart as $key => $item) {
+            if ($item['screening_id'] == $screening_id && $item['seat_id'] == $seat_id) {
+                unset($cart[$key]); // Remove item from cart
+                break; // Stop loop after removing the item
             }
         }
+
+        // Update session with modified cart
+        session()->put('cart', $cart);
+
+        // Redirect back or return response
+        return redirect()->back()->with('alert-type', 'success')
+            ->with('alert-msg', 'Item removed from cart successfully.');
     }
 
-    public function destroy(Request $request): RedirectResponse
+
+    public function destroy(Request $request)
     {
         $request->session()->forget('cart');
-        return back()
-            ->with('alert-type', 'success')
-            ->with('alert-msg', 'Shopping Cart has been cleared');
+        return back()->with('alert-type', 'success')
+            ->with('alert-msg', 'Shopping Cart has been cleared.');
     }
 
 
-    public function confirm(CartConfirmationFormRequest $request): RedirectResponse
+    public function processCart(Request $request)
     {
-        $cart = session('cart', null);
-        if (!$cart || ($cart->count() == 0)) {
-            return back()
-                ->with('alert-type', 'danger')
-                ->with('alert-msg', "Cart was not confirmed, because cart is empty!");
-        } else {
-            $student = Student::where('number', $request->validated()['student_number'])->first();
-            if (!$student) {
-                return back()
-                    ->with('alert-type', 'danger')
-                    ->with('alert-msg', "Student number does not exist on the database!");
-            }
-            $insertDisciplines = [];
-            $disciplinesOfStudent = $student->disciplines;
-            $ignored = 0;
-            foreach ($cart as $discipline) {
-                $exist = $disciplinesOfStudent->where('id', $discipline->id)->count();
-                if ($exist) {
-                    $ignored++;
-                } else {
-                    $insertDisciplines[$discipline->id] = [
-                        "discipline_id" => $discipline->id,
-                        "repeating" => 0,
-                        "grade" => null,
-                    ];
-                }
-            }
-            $ignoredStr = match($ignored) {
-                0 => "",
-                1 => "<br>(1 discipline was ignored because student was already enrolled in it)",
-                default => "<br>($ignored disciplines were ignored because student was already enrolled on them)"
-            };
-            $totalInserted = count($insertDisciplines);
-            $totalInsertedStr = match($totalInserted) {
-                0 => "",
-                1 => "1 discipline registration was added to the student",
-                default => "$totalInserted disciplines registrations were added to the student",
+        $cart = session('cart', []);
 
-            };
-            if ($totalInserted == 0) {
-                $request->session()->forget('cart');
-                return back()
-                    ->with('alert-type', 'danger')
-                    ->with('alert-msg', "No registration was added to the student!$ignoredStr");
-            } else {
-                DB::transaction(function () use ($student, $insertDisciplines) {
-                    $student->disciplines()->attach($insertDisciplines);
-                });
-                $request->session()->forget('cart');
-                if ($ignored == 0) {
-                    return redirect()->route('students.show', ['student' => $student])
-                        ->with('alert-type', 'success')
-                        ->with('alert-msg', "$totalInsertedStr.");
-                } else {
-                    return redirect()->route('students.show', ['student' => $student])
-                        ->with('alert-type', 'warning')
-                        ->with('alert-msg', "$totalInsertedStr. $ignoredStr");
-                }
-            }
+        // Check if cart is empty
+        if (empty($cart)) {
+            return back()->with('alert-type', 'danger')
+                ->with('alert-msg', 'Cart is empty. Please add tickets to proceed.');
         }
+
+        // Here you would typically process the cart, e.g., create orders, finalize payment, etc.
+
+        // For demo purposes, just clear the cart after processing
+        $request->session()->forget('cart');
+
+        return redirect()->route('cart.show')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Purchase completed successfully. Thank you!');
     }
 }

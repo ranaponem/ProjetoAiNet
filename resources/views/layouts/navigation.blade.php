@@ -108,6 +108,13 @@
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
+                    @if(session('cart'))
+                        @can('use-cart')
+                            <x-responsive-nav-link :href="route('cart.show')">
+                                {{ __('My Cart') }}
+                            </x-responsive-nav-link>
+                        @endcan
+                    @endif
 
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">

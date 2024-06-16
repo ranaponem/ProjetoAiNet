@@ -7,6 +7,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
@@ -26,13 +27,16 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('screenings',ScreeningController::class);
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
+        Route::resource('tickets',TicketController::class);
         Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
             ->middleware('can:destroyPhoto,user');
-
         Route::resource('movies', MovieController::class)->except(['index, show']);
         Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
+        Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+        Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+        Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
 });
 
 //Public routes
@@ -45,16 +49,12 @@ Route::get('/moviesOnShow', [MovieController::class, 'indexOnShow'])->name('movi
 Route::get('/moviesOnShow/{movie}/show', [MovieController::class, 'show'])->name('movies.show');
 
 Route::middleware('can:use-cart')->group(function () {
-    // Add a discipline to the cart:
-    Route::post('cart/{ticket}', [CartController::class, 'addToCart'])
-        ->name('cart.add');
-    // Remove a discipline from the cart:
-    Route::delete('cart/{ticket}', [CartController::class, 'removeFromCart'])
-        ->name('cart.remove');
-    // Show the cart:
-    Route::get('cart', [CartController::class, 'show'])->name('cart.show');
-    // Clear the cart:
+    Route::post('/cart/confirm', [CartController::class, 'confirm'])->name('cart.confirm');
+
+    Route::delete('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 });
 
 require __DIR__.'/auth.php';
