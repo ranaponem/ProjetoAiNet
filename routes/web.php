@@ -29,7 +29,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
         Route::resource('customers', CustomerController::class);
         Route::resource('screenings',ScreeningController::class);
-        Route::middleware('can:viewAny,\App\Model\User')->group(function(){
+        Route::middleware('can:view,\App\Model\User')->group(function(){
             Route::resource('users', UserController::class);
         });
         Route::middleware('can:viewAny,\App\Model\Theater')->group(function(){
@@ -48,8 +48,8 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::middleware('can:viewAny,\App\Model\Movie')->group(function(){
             Route::resource('movies', MovieController::class)->except(['index, show']);
         });
-        
-        Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
+
+    Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
         Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
         Route::get('cart', [CartController::class, 'show'])->name('cart.show');
         Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');

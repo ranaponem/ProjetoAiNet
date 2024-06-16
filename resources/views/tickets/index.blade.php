@@ -45,7 +45,7 @@
 
             <div class="grid grid-cols-1 gap-4 mt-6">
                 @foreach($tickets as $ticket)
-                    
+
                 @endforeach
             </div>
         </div>

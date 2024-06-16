@@ -109,6 +109,7 @@ class MovieController extends Controller
                 break;
             case 2:
                 $screenings = $movie->screenings;
+                break;
             default:
                 // Invalid filter, default to showing today's screenings
                 $screenings = $this->getScreeningsForDateRange($movie, $startDate, $endDate);

@@ -17,6 +17,42 @@ class UserController extends Controller
 {
     use AuthorizesRequests;
 
+    //create the create function that will return the view
+    public function create()
+    {
+        $user = new User();
+        return view('users.create')->with('user', $user);
+    }
+
+    //create the store function that will store the user
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'type' => 'required|string|in:A,C,E', // Assuming 'A', 'C', and 'E' are valid types
+            'password' => 'required|string|min:8',
+            'image_file' => 'nullable|image|max:10048', // Adjust the max size as needed
+        ]);
+
+        // Handle file upload for the profile photo
+        $photoFilename = null;
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('public/photos');
+            $photoFilename = basename($path);
+        }
+
+        $user = new User();
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+        $user->type = $validatedData['type'];
+        $user->password = bcrypt($validatedData['password']);
+        $user->photo_filename = $photoFilename;
+        $user->save();
+
+        return redirect()->route('users.edit', ['user' => $user->id])->with('status', 'user-created');
+    }
+
     /**
      * Display a listing of the resource.
      */

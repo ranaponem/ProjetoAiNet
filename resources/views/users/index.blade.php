@@ -1,14 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Lista de Utilizadores') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ __('Lista de Utilizadores') }}
+                </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Visualize as informações de perfil dos utilizadores.") }}
-        </p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    {{ __("Visualize as informações de perfil dos utilizadores.") }}
+                </p>
+            </div>
+
+            <div class="ml-4">
+                <a href="{{ route('users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    {{ __('Create new User') }}
+                </a>
+            </div>
+        </div>
     </x-slot>
-
     <div class="py-12 bg-gray-900">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Search Bar and Filters -->

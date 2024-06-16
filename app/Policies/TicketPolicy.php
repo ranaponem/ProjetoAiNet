@@ -21,7 +21,7 @@ class TicketPolicy
 
     public function create(User $user): bool
     {
-        return $user->type === 'C';
+        return $user->type === 'C' || $user->type === 'A';
     }
 
     public function update(User $user): bool
