@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
@@ -68,7 +69,9 @@ class MovieController extends Controller
      */
     public function create(): View
     {
-        return view('movies.create');
+        $genres=Genre::all();
+        $movie=new Movie();
+        return view('movies.create',compact('movie','genres'));
     }
 
     /**
@@ -76,7 +79,34 @@ class MovieController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        return redirect()->route('movies.index');
+        // Validate the request data
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'trailer_url' => 'required|url',
+            'genre_code' => 'required|string|exists:genres,code|max:20',
+            'poster_filename' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max size for image files
+            'synopsis' => 'nullable|string',
+            'year'=>'required|integer|min:1900|max:2100|digits:4',
+        ]);
+
+        // Handle file upload for poster
+        if ($request->hasFile('poster_filename')) {
+            $posterPath = $request->file('poster_filename')->store('public/posters');
+            $photoFilename = basename($posterPath);
+        }
+
+        // Create a new movie record
+        $movie = new Movie();
+        $movie->title = $validatedData['title'];
+        $movie->year = $validatedData['year'];
+        $movie->trailer_url = $validatedData['trailer_url'];
+        $movie->genre_code = $validatedData['genre_code'];
+        $movie->synopsis = $validatedData['synopsis'] ?? null;
+        $movie->poster_filename = $photoFilename ?? null;
+        $movie->save();
+
+        // Redirect back to the index page with success message
+        return redirect()->route('movies.index')->with('success', 'Movie created successfully!');
     }
 
     /**
@@ -162,16 +192,51 @@ class MovieController extends Controller
      */
     public function edit(Movie $movie): View
     {
-        return view('movies.create')->with('movie', $movie);
+        $genres=Genre::all();
+        return view('movies.edit',compact('movie','genres'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Movie $movie)
+    public function update(Request $request, Movie $movie): RedirectResponse
     {
-        return redirect()->route('movies.index');
+        // Validate the request data
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'trailer_url' => 'required|url',
+            'genre_code' => 'required|string|exists:genres,code|max:20',
+            'poster_filename' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max size for image files
+            'synopsis' => 'nullable|string',
+            'year' => 'required|integer|min:1900|max:2100|digits:4',
+        ]);
+
+        // Handle file upload for poster if a new file is uploaded
+        if ($request->hasFile('poster_filename')) {
+            // Delete the existing poster file if it exists
+            if ($movie->poster_filename) {
+                Storage::delete('public/posters/' . $movie->poster_filename);
+            }
+
+            // Store the new poster file
+            $posterPath = $request->file('poster_filename')->store('public/posters');
+            $validatedData['poster_filename'] = basename($posterPath);
+        } else {
+            // If no new file uploaded, keep the existing poster file
+            $validatedData['poster_filename'] = $movie->poster_filename;
+        }
+
+        // Update the movie record
+        $movie->update([
+            'title' => $validatedData['title'],
+            'year' => $validatedData['year'],
+            'trailer_url' => $validatedData['trailer_url'],
+            'genre_code' => $validatedData['genre_code'],
+            'synopsis' => $validatedData['synopsis'],
+            'poster_filename' => $validatedData['poster_filename'],
+        ]);
+
+        // Redirect back to the index page with success message
+        return redirect()->route('movies.index')->with('success', 'Movie updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.

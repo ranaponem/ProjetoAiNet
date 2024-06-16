@@ -29,7 +29,7 @@ class Movie extends Model
 
     public function getImageUrlAttribute()
     {
-        if ($this->imageExists) {
+        if ($this->getImageExistsAttribute()) {
             return asset("storage/posters/{$this->poster_filename}");
         } else {
             return asset("storage/posters/_no_poster_2.png");
@@ -43,4 +43,5 @@ class Movie extends Model
     public function screenings(): HasMany{
         return $this->hasMany(Screening::class);
     }
+
 }

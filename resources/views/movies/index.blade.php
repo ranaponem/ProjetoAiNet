@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Movies on show')
+@section('header-title', 'Movies')
 
 @section('main')
 
@@ -15,8 +15,8 @@
     </style>
 
     <main class="justify-center">
-        <div class="flex justify-between">
-            <div class="mb-6 w-4/5">
+        <div class="flex justify-between mb-6">
+            <div class="w-4/5">
                 <form action="{{ route('movies.index') }}" method="GET" class="flex space-x-4 w-full">
                     <input type="text" name="search" placeholder="{{ __('Search movies...') }}"
                            value="{{ request('search') }}"
@@ -27,7 +27,7 @@
                     </button>
                 </form>
             </div>
-            <div class="flex flex-wrap justify-center">
+            <div class="flex">
                 <x-dropdown-scroll align="right">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-5 py-4 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -61,7 +61,7 @@
         <div class="flex flex-wrap justify-center">
             @foreach($movies as $movie)
                 <div class="w-full md:w-1/2 lg:w-1/5 p-2">
-                    <a href="{{ route('movies.show', ['movie' => $movie]) }}">
+                    <a href="{{ route('movies.edit', ['movie' => $movie]) }}">
                         <div class="h-full rounded overflow-hidden shadow-lg bg-white dark:bg-gray-900">
                             <img class="h-5/6 w-full" src="{{ $movie->getImageUrlAttribute() }}" alt="{{$movie->poster_filename}}">
                             <h1 class="text-center font-bold mb-4 mt-4 text-black dark:text-gray-50">{{$movie->title}}</h1>

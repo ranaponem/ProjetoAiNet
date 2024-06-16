@@ -31,8 +31,13 @@
 
                     @can('update', \App\Models\Configuration::class)
                         <x-nav-link :href="route('configuration.edit')" :active="request()->routeIs('dashboard')">
-                            {{ __('Price Configuration') }}
+                            {{ __('Configuration') }}
                         </x-nav-link>
+                    @endcan
+                    @can('create', \App\Models\Movie::class)
+                            <x-nav-link :href="route('movies.create')" :active="request()->routeIs('dashboard')">
+                                {{ __('Create Movies') }}
+                            </x-nav-link>
                     @endcan
 
                     @can('viewAny', \App\Models\Ticket::class)
