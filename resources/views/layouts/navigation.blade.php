@@ -25,13 +25,19 @@
 
                     @can('viewAny', \App\Models\Movie::class)
                         <x-nav-link :href="route('movies.index')" :active="request()->routeIs('dashboard')">
-                            {{ __('Movies Cathalog') }}
+                            {{ __('Movies Catalogue') }}
                         </x-nav-link>
                     @endcan
 
                     @can('update', \App\Models\Configuration::class)
                         <x-nav-link :href="route('configuration.edit')" :active="request()->routeIs('dashboard')">
                             {{ __('Price Configuration') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('viewAny', \App\Models\Ticket::class)
+                        <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('dashboard')">
+                            {{ __('Tickets') }}
                         </x-nav-link>
                     @endcan
                 </div>
