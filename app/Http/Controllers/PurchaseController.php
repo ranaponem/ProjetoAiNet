@@ -36,6 +36,8 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+
+
         // Validate the incoming request
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
@@ -65,6 +67,8 @@ class PurchaseController extends Controller
 
         // Create tickets associated with this purchase
         $purchase->createTicketsFromCart($cart);
+
+        session()->forget('cart');
 
         // Redirect back or to a confirmation page
         return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
