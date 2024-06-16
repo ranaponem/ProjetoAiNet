@@ -81,4 +81,24 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function destroyPhoto(): RedirectResponse
+    {
+        // Authorize the action using UserPolicy
+        $user= Auth::user();
+        $this->authorize('destroyPhoto', $user);
+
+        try {
+            if ($user->photo_filename) {
+                if (Storage::exists('public/photos/' . $user->photo_filename)) {
+                    Storage::delete('public/photos/' . $user->photo_filename);
+                }
+                $user->photo_filename = null;
+                $user->save();
+            }
+            return redirect()->back()->with('status', 'User photo deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete user photo. ' . $e->getMessage());
+        }
+    }
 }

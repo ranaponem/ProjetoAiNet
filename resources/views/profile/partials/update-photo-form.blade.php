@@ -25,11 +25,29 @@
             />
         </div>
     </form>
+    <form class="hidden" id="form_to_delete_image"
+          method="POST" action="{{ route('users.photo.destroy', ['user' => $user]) }}">
+        @csrf
+        @method('DELETE')
+    </form>
+
 
     <!-- JavaScript to automatically submit the form when a new photo is selected -->
     <script>
         document.getElementById('image_file').addEventListener('change', function() {
             document.getElementById('profile-form').submit();
+        });
+    </script>
+    <script>
+        // Function to submit delete form when delete button is clicked
+        function deletePhoto() {
+            document.getElementById('form_to_delete_image').submit();
+        }
+
+        // Listen for click on delete button
+        document.getElementById('delete-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            deletePhoto(); // Call delete function
         });
     </script>
 </section>
