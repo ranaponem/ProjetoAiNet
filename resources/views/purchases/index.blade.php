@@ -52,7 +52,7 @@
                                 {{ $purchase->date }}
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                                ${{ number_format($purchase->total_price, 2) }}
+                                {{ number_format($purchase->total_price, 2) }}€
                             </td>
                             <td class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                                 {{ $purchase->payment_type }}
