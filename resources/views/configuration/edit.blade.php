@@ -8,7 +8,7 @@
     <div class="mt-6 space-y-4">
         <section>
 
-            <form id="theater-form" method="post" action="{{ route('configuration.update', ['configuration' => $conf]) }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+            <form id="configuration-form" method="post" action="{{ route('configuration.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
                 @csrf
                 @method('patch')
         
@@ -22,10 +22,11 @@
                                        value="{{ old('registered_customer_ticket_discount', $conf->registered_customer_ticket_discount) }}"/>
                     </div>
                 </div>
+                @can('update', 'configuration')
                 <div class="flex items-center gap-4 ">
                     <x-primary-button>{{ __('Save') }}</x-primary-button>
         
-                    @if (session('status') === 'configuration-updated')
+                    @if (session('status') === 'configuration-created')
                         <p
                             x-data="{ show: true }"
                             x-show="show"
@@ -35,6 +36,7 @@
                         >{{ __('Saved.') }}</p>
                     @endif
                 </div>
+                @endcan
             </form>
         </section>
     </div>

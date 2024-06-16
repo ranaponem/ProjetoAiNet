@@ -34,12 +34,12 @@ class ConfigurationPolicy
         return $user->type === 'A';
     }
 
-    public function update(User $user, Configuration $conf): bool
+    public function update(User $user): bool
     {
         return $user->type === 'A';
     }
 
-    public function delete(User $user, Configuration $conf): bool
+    public function delete(User $user): bool
     {
         return $user->type === 'A';
     }

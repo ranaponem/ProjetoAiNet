@@ -25,8 +25,9 @@ class ConfigurationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ConfigurationFormRequest $request, Configuration $conf): RedirectResponse
+    public function update(ConfigurationFormRequest $request): RedirectResponse
     {
+        $conf = Configuration::first();
         $validatedData = $request->validated();
         DB::transaction(function () use ($validatedData, $conf) {
             $conf->ticket_price = $validatedData['ticket_price'];

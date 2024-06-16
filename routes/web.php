@@ -33,7 +33,7 @@ Route::middleware('auth', 'verified')->group(function () {
             ->middleware('can:destroyPhoto,user');
 
         Route::get('/configuration', [ConfigurationController::class, 'edit'])->name('configuration.edit');
-        Route::patch('/configuration/{configuration}', [ConfigurationController::class, 'update'])->name('configuration.update');
+        Route::patch('/configuration', [ConfigurationController::class, 'update'])->name('configuration.update');
 
         Route::resource('movies', MovieController::class)->except(['index, show']);
         Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
