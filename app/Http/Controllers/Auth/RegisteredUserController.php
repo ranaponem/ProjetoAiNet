@@ -49,8 +49,8 @@ class RegisteredUserController extends Controller
 
         //create a new customer
         $customer = new Customer();
-        $customer->user_id = $user->id;
-        $customer->name = $user->name;
+        $customer->id = $user->id;
+        $customer->save();
 
         return redirect(route('dashboard', absolute: false));
     }
