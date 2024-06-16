@@ -15,17 +15,24 @@ class PurchaseController extends Controller
         return view('purchases.index', compact('purchases'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        // Return a view to create a new purchase
-        return view('purchases.create');
+        $tickets = $request->session()->get('cart');
+
+        // Calculate total price
+        $total = 0;
+        foreach ($tickets as $item) {
+            $total += $item['price'];
+        }
+
+        return view('purchases.create', compact('tickets', 'total'));
     }
 
     public function store(Request $request)
     {
         // Validate the incoming request
         $validated = $request->validate([
-            'customer_id' => 'nullable|exists:customers,id',
+            'customer_id' => 'required|exists:customers,id',
             'date' => 'required|date',
             'total_price' => 'required|numeric|min:0',
             'customer_name' => 'required|string|max:255',
@@ -33,17 +40,8 @@ class PurchaseController extends Controller
             'nif' => 'nullable|string|max:20',
             'payment_type' => 'required|string|max:50',
             'payment_ref' => 'required|string|max:100',
-            'receipt_pdf' => 'nullable|file|mimes:pdf|max:2048', // Assuming receipt PDF upload
+            'receipt_pdf' => 'nullable|file|mimes:pdf|max:2048',
         ]);
-
-        // Handle receipt PDF file upload if present
-        if ($request->hasFile('receipt_pdf')) {
-            $file = $request->file('receipt_pdf');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('receipts', $filename); // Store in storage/app/receipts directory
-        } else {
-            $filename = null;
-        }
 
         // Create a new Purchase instance
         $purchase = Purchase::create([

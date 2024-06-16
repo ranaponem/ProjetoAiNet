@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Services\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -43,6 +44,25 @@ class CustomerController extends Controller
         try {
             // Create a new Customer instance with the validated data
             Customer::create($validatedData);
+            //if the request payment_type is visa use the Payment service to validate the payment
+            if ($request->payment_type == 'VISA') {
+                //because we don't store de cvc code we just send a valid one
+                if (!Payment::payWithVisa($request->payment_ref, 177)) {
+                    return redirect()->back()->withInput()->with('error', 'Failed to create customer. Invalid payment data.');
+                }
+            }
+            //do the same with paypal and mbway
+            if ($request->payment_type == 'PAYPAL') {
+                if (!Payment::payWithPaypal($request->payment_ref)) {
+                    return redirect()->back()->withInput()->with('error', 'Failed to create customer. Invalid payment data.');
+                }
+            }
+            if ($request->payment_type == 'MBWAY') {
+                if (!Payment::payWithMBway($request->payment_ref)) {
+                    return redirect()->back()->withInput()->with('error', 'Failed to create customer. Invalid payment data.');
+                }
+            }
+
 
             // Redirect to the customer index page with a success message
             return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
