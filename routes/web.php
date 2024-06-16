@@ -12,6 +12,7 @@ use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Movie;
+use App\Models\Theater;
 use Illuminate\Support\Facades\Route;
 
 //Not verified users
@@ -30,7 +31,8 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('theaters', TheaterController::class);
         Route::resource('tickets',TicketController::class);
-        Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', 'theater');
+        Route::get('/tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate');
+        Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy')->can('update', Theater::class);
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
             ->middleware('can:destroyPhoto,user');

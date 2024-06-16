@@ -66,12 +66,22 @@
                     </div>
                     <div class="overflow-y-scroll no-scrollbar mt-4  justify-center">
                         @foreach ($screenings as $screening)
+                            @can('create', 'ticket')
                             <a href="{{ route('screenings.show',['screening'=>$screening])  }}">
                                 <div class="flex hover:bg-gray-800">
                                     <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
                                     <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
                                 </div>
                             </a>
+                            @endcan
+                            @can('validate', 'ticket')
+                            <a href="{{ route('tickets.validate',['screening'=>$screening])  }}">
+                                <div class="flex hover:bg-gray-800">
+                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
+                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
+                                </div>
+                            </a>
+                            @endcan
                         @endforeach
                     </div>
                 </div>

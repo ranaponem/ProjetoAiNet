@@ -2,23 +2,16 @@
 
 namespace App\Policies;
 
-use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class MoviePolicy
+class TicketPolicy
 {
     use HandlesAuthorization;
 
     public function viewAny(User $user): bool
     {
         return $user->type === 'A';
-    }
-
-
-    public function viewOnShow(User $user): bool
-    {
-        return true;
     }
 
     public function view(User $user): bool
@@ -28,16 +21,21 @@ class MoviePolicy
 
     public function create(User $user): bool
     {
-        return $user->type === 'A';
+        return $user->type === 'C';
     }
 
     public function update(User $user): bool
     {
-        return $user->type === 'A' ;
+        return $user->type === 'A';
     }
 
     public function delete(User $user): bool
     {
         return $user->type === 'A' ;
+    }
+
+    public function validate(User $user): bool
+    {
+        return $user->type === 'E';
     }
 }
