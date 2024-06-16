@@ -30,7 +30,7 @@ class MovieController extends Controller
             });
         }
 
-        $movies = $query->get();
+        $movies = $query->paginate(10)->withQueryString();
 
         return view('movies.index',compact('movies', 'genres'));
     }
