@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
