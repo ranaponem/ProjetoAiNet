@@ -28,6 +28,12 @@
                             {{ __('Movies Cathalog') }}
                         </x-nav-link>
                     @endcan
+
+                    @can('update', \App\Models\Configuration::class)
+                        <x-nav-link :href="route('configuration.edit')" :active="request()->routeIs('dashboard')">
+                            {{ __('Price Configuration') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 

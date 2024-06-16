@@ -27,6 +27,11 @@
                     />
                 </div>
             </div>
+            <!-- TODO Bruno -->
+            <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10">
+                <x-field.input name="rows" label="Rows"/>
+                <x-field.input name="cols" label="Cols"/>
+            </div>
             <div class="flex items-center gap-4 ">
                 <x-primary-button>{{ __('Save') }}</x-primary-button>
 

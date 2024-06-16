@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TheaterFormRequest extends FormRequest
+class ConfigurationFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,9 @@ class TheaterFormRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|string|max:255',
-            'image_file' => 'sometimes|image|mimes:png|max:4096', // maxsize = 4Mb
+            'ticket_price' => 'required|numeric',
+            'registered_customer_ticket_discount' => 'required|numeric',
         ];
         return $rules;
-    }
-
-    public function messages(): array
-    {
-        return [
-            'ECTS.required' => 'ECTS is required',
-            'ECTS.integer' => 'ECTS must be an integer',
-            'ECTS.min' => 'ECTS must be equal or greater that 1',
-        ];
     }
 }

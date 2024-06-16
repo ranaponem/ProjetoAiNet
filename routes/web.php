@@ -7,7 +7,6 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
-use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +31,10 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
             ->middleware('can:destroyPhoto,user');
+
+        Route::get('/configuration', [ConfigurationController::class, 'edit'])->name('configuration.edit');
+        Route::patch('/configuration', [ConfigurationController::class, 'update'])->name('configuration.update');
+
         Route::resource('movies', MovieController::class)->except(['index, show']);
         Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
         Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');

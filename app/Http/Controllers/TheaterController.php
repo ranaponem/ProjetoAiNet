@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TheaterFormRequest;
+use App\Http\Requests\TheaterCreateFormRequest;
+use App\Http\Requests\TheaterUpdateFormRequest;
+use App\Models\Seat;
 use App\Models\Theater;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -38,7 +40,7 @@ class TheaterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TheaterFormRequest $request): RedirectResponse
+    public function store(TheaterCreateFormRequest $request): RedirectResponse
     {
         $validatedData = $request->validated();
         $newTheater = DB::transaction(function () use ($validatedData, $request) {
@@ -52,6 +54,19 @@ class TheaterController extends Controller
             }
             return $newTheater;
         });
+
+        for($i = 1 ; $i <= $validatedData['rows'] ; $i++){
+            for($j = 1 ; $j <= $validatedData['cols'] ; $j++){
+                $newSeat = DB::transaction(function () use ($i, $j, $newTheater) {
+                    $newSeat = new Seat();
+                    $newSeat->theater_id = $newTheater->id;
+                    $newSeat->row = chr(ord('A') + $i - 1);
+                    $newSeat->seat_number = $j;
+                    $newSeat->save();
+                    return $newSeat;
+                });
+            }
+        }
         return redirect()->route('theaters.index');  
     }
 
@@ -66,7 +81,7 @@ class TheaterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(TheaterFormRequest $request, Theater $theater): RedirectResponse
+    public function update(TheaterUpdateFormRequest $request, Theater $theater): RedirectResponse
     {
         $validatedData = $request->validated();
         $theater = DB::transaction(function () use ($validatedData, $theater, $request) {
@@ -94,10 +109,10 @@ class TheaterController extends Controller
      */
     public function destroy(Theater $theater): RedirectResponse
     {
-        foreach($theater->seats() as $seat){
+        foreach($theater->seats as $seat){
             $seat->delete();
         }
-        foreach($theater->screenings() as $screening){
+        foreach($theater->screenings as $screening){
             $screening->delete();
         }
         $theater->delete();
