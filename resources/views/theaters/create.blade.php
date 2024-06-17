@@ -7,44 +7,49 @@
     <form method="POST" action="{{ route('theaters.store') }}"
           enctype="multipart/form-data">
         @csrf
-        <div class="mt-6 space-y-4">
+        <div class="mt-6 space-y-4 relative">
 
             <div class="p-6 sm:px-10 bg-gray-800 flex">
-                <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10">
+                <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10 mt-14">
                     <x-field.input name="name" label="Name"
                                    value="{{ old('name', $theater->name) }}"/>
+                    <div class="inline-block mr-2">
+                        <x-field.input name="rows" label="Rows (max. 26)"/></div>
+                    <div class="inline-block mx-2">
+                        <x-field.input name="cols" label="Cols (max. 26)"/></div>
+                    <div class="flex items-center gap-4 absolute bottom-12">
+                        <x-primary-button>{{ __('Save') }}</x-primary-button>
+
+                        @if (session('status') === 'theater-updated')
+                            <p
+                                x-data="{ show: true }"
+                                x-show="show"
+                                x-transition
+                                x-init="setTimeout(() => show = false, 2000)"
+                                class="text-sm text-gray-600 dark:text-gray-400"
+                            >{{ __('Saved.') }}</p>
+                        @endif
+                    </div>
+                    
                 </div>
+
                 <div class="grow mt-9 space-y-4 inline-block pb-4">
-                    <x-field.image
-                        id="image_file"
-                        name="image_file"
-                        label="Theater Picture"
-                        width="md"
-                        height=""
-
-
-                        :imageUrl="$theater->photo_filename ? asset('storage/photos/' . $theater->photo_filename) : 'storage/photos/475_666c4e5ed23f0.jpg'"
-                    />
-                </div>
+                        <x-field.image
+                            id="image_file"
+                            name="image_file"
+                            label="Theater Picture"
+                            width="md"
+                            height=""
+                            deleteTitle="Delete"
+                            :deleteAllow="$theater->getImageExistsAttribute()"
+                            deleteForm="form_to_delete_image"
+                            :imageUrl="$theater->getImageUrlAttribute()"
+                        />
+                    </div>
             </div>
             <!-- TODO Bruno -->
-            <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10">
-                <x-field.input name="rows" label="Rows"/>
-                <x-field.input name="cols" label="Cols"/>
-            </div>
-            <div class="flex items-center gap-4 ">
-                <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-                @if (session('status') === 'theater-updated')
-                    <p
-                        x-data="{ show: true }"
-                        x-show="show"
-                        x-transition
-                        x-init="setTimeout(() => show = false, 2000)"
-                        class="text-sm text-gray-600 dark:text-gray-400"
-                    >{{ __('Saved.') }}</p>
-                @endif
-            </div>
+            
+            
     </form>
 
     </div>

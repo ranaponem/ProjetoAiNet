@@ -55,13 +55,21 @@
 
 
             <div>
-                <x-input-label for="blocked" :value="__('Blocked')" />
-                <select id="blocked" name="blocked" class="mt-1 block w-full" :disabled="$readonly">
-                    <option value="1" {{ old('blocked', $user->blocked) == 1 ? 'selected' : '' }}>Yes</option>
-                    <option value="0" {{ old('blocked', $user->blocked) == 0 ? 'selected' : '' }}>No</option>
-                </select>
                 <x-input-error class="mt-2" :messages="$errors->get('blocked')" />
+                <div class="flex my-2">
+                    <x-input-label for="blocked" :value="__('')" class="mb-6"/>
+                    <div class="inline-block mx-2">
+                        <input type="radio" id="locked" name="blocked" value="1" @if ($user->blocked === 1) checked @endif >
+                        <label for="locked" class="text-gray-300 ml-2">Locked</label><br>
+                    </div>
+                    <div class="inline-block mx-2">
+                        <input type="radio" id="unlocked" name="blocked" value="0" @if ($user->blocked === 0) checked @endif>
+                        <label for="unlocked" class="text-gray-300 ml-2">Unlocked</label><br>
+                    </div>
+                    <x-input-error class="mt-2" :messages="$errors->get('user_blocked')" />
+                </div>
             </div>
+
         </div>
 
         <div class="flex items-center gap-4">

@@ -18,6 +18,7 @@
             </div>
         </div>
     </x-slot>
+
     <div class="py-12 bg-gray-900">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Search Bar and Filters -->
@@ -111,7 +112,10 @@
                     </div>
                 @endforeach
             </div>
-        </div>
+            <div class="mt-4">
+                {{ $users->links() }}
+            </div>
+        </div>  
     </div>
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
@@ -138,7 +142,5 @@
             </div>
         </form>
     </x-modal>
-    <div class="mt-4">
-        {{ $users->links() }}
-    </div>
+    
 </x-app-layout>

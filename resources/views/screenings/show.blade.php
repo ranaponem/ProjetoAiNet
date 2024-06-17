@@ -3,8 +3,9 @@
 @section('header-title', $screening->movie->title.': Select your seat')
 
 @section('main')
-    <div class="justify-center flex bg-slate-700 py-10">
-        <div class="justify-center bg-slate-700 py-10">
+    <div class="justify-center rounded flex bg-slate-700 pb-10">
+        <div class="justify-center bg-slate-700 pb-10">
+            <div class="rounded bg-slate-400  py-6 px-6 mx-1 mt-5 mb-6  text-center text-4xl">Screen is Here</div>
             @foreach($screening->theater->seats as $seat)
                 {{-- Check if the seat is already reserved --}}
                 @php
@@ -18,25 +19,15 @@
                 @endphp
                 {{-- Add line break after each row of seats --}}
                 @if ($seat->seat_number==1)
-                    <br><br><br>
+                    <div class="-mx-6 my-0 text-gray-400">{{ $seat->row }}</div>
                 @endif
                 {{-- Determine the style based on seat availability --}}
                 @if ($seat_reserved)
-                    <span class="bg-gray-400 rounded p-4 mx-1 my-20 cursor-not-allowed opacity-50">{{ $seat->seat_number }}</span>
+                    <a class="rounded bg-yellow-600 cursor-not-allowed hover:bg-slate-200 lg:py-2 md:py-2 sm:py-1 lg:px-4 md:px-4 sm:px-3  mx-1 sm:mx-0.5 my-20"></a>
                 @else
-                    <a href="{{ route('tickets.create',['seat' => $seat,'screening' => $screening]) }}" class="rounded bg-slate-400 hover:bg-slate-200 p-4 mx-1 my-20">{{ $seat->seat_number }}</a>
+                    <a href="{{ route('tickets.create',['seat' => $seat,'screening' => $screening]) }}" class="rounded bg-slate-400 hover:bg-slate-200 lg:py-2 md:py-2 sm:py-1 lg:px-4 md:px-4 sm:px-3 mx-1 sm:mx-0.5 my-20"></a>
                 @endif
             @endforeach
         </div>
     </div>
-    <!-- debug
-    <div>
-        <h2>Tickets</h2>
-        <ul>
-            @foreach($screening->tickets as $ticket)
-                <li class="text-white-50">Ticket ID: {{ $ticket->id }}, Seat: {{ $ticket->seat->row }} {{ $ticket->seat->seat_number }}</li>
-            @endforeach
-        </ul>
-    </div>
-    -->
 @endsection

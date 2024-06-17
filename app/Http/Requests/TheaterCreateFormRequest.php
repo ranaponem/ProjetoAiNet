@@ -24,8 +24,8 @@ class TheaterCreateFormRequest extends FormRequest
         $rules = [
             'name' => 'required|string|max:255',
             'image_file' => 'sometimes|image|max:4096',
-            'rows' => 'required|int',
-            'cols' => 'required|int',
+            'rows' => 'required|int|max:26|min:0',
+            'cols' => 'required|int|max:26|min:0',
         ];
         return $rules;
     }

@@ -32,7 +32,7 @@ class MovieController extends Controller
             });
         }
 
-        $movies = $query->paginate(10)->withQueryString();
+        $movies = $query->paginate(15)->withQueryString();
 
         return view('movies.index',compact('movies', 'genres'));
     }
@@ -59,7 +59,7 @@ class MovieController extends Controller
             });
         }
 
-        $moviesOnShow = $query->get();
+        $moviesOnShow = $query->paginate(15)->withQueryString();
 
         return view('movies.indexOnShow',compact('moviesOnShow', 'genres'));
     }

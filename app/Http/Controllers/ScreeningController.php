@@ -68,6 +68,16 @@ class ScreeningController extends Controller
             ->with('success', 'Screening created successfully.');
     }
 
+    public function show(string $id)
+    {
+        // Retrieve the screening by its ID and load related movie, theater, and tickets
+        $screening = Screening::with(['movie', 'theater', 'tickets'])->findOrFail($id);
+        $tickets = $screening->tickets;
+
+        // Return the view with the screening data
+        return view('screenings.show', compact('screening','tickets'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

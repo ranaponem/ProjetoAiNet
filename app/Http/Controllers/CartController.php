@@ -21,6 +21,7 @@ class CartController extends Controller
         $screening_id = $request->input('screening_id');
         $seat_id = $request->input('seat_id');
         $price = $request->input('price');
+        $redirect = $request->input('redirect');
 
         // Check if the same ticket (screening_id and seat_id combination) already exists in cart
         $cart = $request->session()->get('cart', []);
@@ -45,7 +46,12 @@ class CartController extends Controller
         $request->session()->put('cart', $cart);
 
         // Redirect back to the previous page or a confirmation page
-        return redirect()->route('movies.indexOnShow');
+        if($redirect){
+            return redirect()->route('movies.indexOnShow'); 
+        }else{
+            return redirect()->route('cart.show');   
+        }
+        
     }
 
     public function removeFromCart(Request $request)

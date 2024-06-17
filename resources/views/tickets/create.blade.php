@@ -1,27 +1,72 @@
 @extends('layouts.main')
 
-@section('header-title', 'Create Tickets')
+@section('header-title', 'Confirmation')
 
 @section('main')
     <div class="container mx-auto mt-6">
-        <h2 class="text-white text-2xl font-bold mb-4">Buy Ticket for {{ $screening->movie->title }}</h2>
+        
 
-        <div class="mb-4 text-white">
-            <p><strong>Movie:</strong> {{ $screening->movie->title }}</p>
-            <p><strong>Date:</strong> {{ $screening->date }}</p>
-            <p><strong>Theater:</strong> {{ $screening->theater->name }}</p>
-            <p><strong>Screening Time:</strong> {{ $screening->start_time }}</p>
-            <p><strong>Price:</strong> {{ number_format($price, 2) }}€</p>
-            <p><strong>Seat:</strong> {{ $seat->seat_number }}{{ $seat->row }}</p>
+        <div class="mb-4 rounded p-10 text-white bg-gray-800">
+            <h2 class="text-white text-3xl font-bold mb-4">You are about to add a ticket for '{{ $screening->movie->title }}' to cart</h2>
+            <div class="inline-block  mb-4 rounded py-4 px-8 text-white bg-gray-700" >
+                <p class="my-1 text-2xl"><strong>Movie:</strong> {{ $screening->movie->title }}</p>
+                <p class="my-1"><strong>Date:</strong> {{ $screening->date }}</p>
+                <p class="my-1"><strong>Screening Time:</strong> {{ $screening->start_time }}</p>
+                <p class="my-1"><strong>Theater:</strong> {{ $screening->theater->name }}</p>
+                <p class="my-1"><strong>Seat:</strong> {{ $seat->seat_number }}{{ $seat->row }}</p>
+                <p class="my-1 text-xl "><strong>Price:</strong> {{ number_format($price, 2) }}€</p>
+            </div>
+            
         </div>
-
-        <form action="{{ route('cart.add') }}" method="POST">
-            @csrf
-            <input type="hidden" name="screening_id" value="{{ $screening->id }}">
-            <input type="hidden" name="seat_id" value="{{ $seat->id }}">
-            <input type="hidden" name="price" value="{{ $price }}">
-
-            <button type="submit">Add to Cart</button>
-        </form>
+        <div class="flex justify-between">
+            <a href="{{ route('screenings.show', ['screening'=>$screening]) }}">
+                <x-secondary-button href="{{ route('screenings.show', ['screening'=>$screening]) }}">Cancel</x-secondary-button>
+            </a>
+            
+ 
+            <div class="">
+                <x-primary-button class="py-3"
+                                    x-data=""
+                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-theater-deletion')"
+                >{{ __('Add to Cart') }}</x-primary-button>
+            </div>
+            
+        </div>
     </div>
+
+    <x-modal name="confirm-theater-deletion" :show="$errors->theaterDeletion->isNotEmpty()" focusable>
+            <form action="{{ route('cart.add') }}" id="multi-action-form" method="POST" class="ml-2">
+                    @csrf
+                <div class="m-4">
+                    <input type="hidden" name="screening_id" value="{{ $screening->id }}">
+                    <input type="hidden" name="seat_id" value="{{ $seat->id }}">
+                    <input type="hidden" name="price" value="{{ $price }}">
+                    <input type="hidden" name="redirect" id="redirect" value="">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ __('Are you sure you want to delete this theater?') }}
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('Once this theater is deleted, all of its resources and data will be permanently deleted.') }}
+                </p>
+
+                <div class="mt-6 flex justify-end ">
+                    <button type="button" onclick="submitForm(1)" class="px-4 py-2 mx-2 font-semibold text-white bg-gray-500 rounded hover:bg-gray-400">
+                        Continue Browsing
+                    </button>
+                    <button type="button" onclick="submitForm(0)" class="px-4 py-2 mx-2 font-semibold text-white bg-gray-500 rounded hover:bg-gray-400">
+                        Go to Cart
+                    </button>
+                </div>
+            </form>
+        </x-modal>
+
+        <script>
+        function submitForm(redirectValue) {
+            const form = document.getElementById('multi-action-form');
+            const redirectInput = document.getElementById('redirect');
+            redirectInput.value = redirectValue;
+            form.submit();
+        }
+    </script>
 @endsection
