@@ -1,25 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    {{ __('Lista de Utilizadores') }}
-                </h2>
+        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+            {{ __('Lista de Utilizadores') }}
+        </h2>
 
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {{ __("Visualize as informações de perfil dos utilizadores.") }}
-                </p>
-            </div>
-
-            <div class="ml-4">
-                <a href="{{ route('users.create') }}" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    {{ __('Create new User') }}
-                </a>
-            </div>
-        </div>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            {{ __("Visualize as informações de perfil dos utilizadores.") }}
+        </p>
     </x-slot>
 
-    <div class="py-12 bg-gray-900">
+    <div class="py-12 bg-gray-200 dark:bg-gray-900">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Search Bar and Filters -->
             <div class="mb-6">
@@ -36,27 +26,27 @@
 
             <div class="flex justify-center space-x-4 mt-6">
                 <a href="{{ route('users.index') }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == null ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == null ? 'bg-gray-300 text-gray-80 dark:text-gray-400 dark:bg-white hover:bg-gray-50' : 'bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
                     {{ __('All') }}
                 </a>
                 <a href="{{ route('users.index', ['type' => 'A']) }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'A' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'A' ? 'bg-gray-300 text-gray-80 dark:text-gray-400 dark:bg-white hover:bg-gray-50' : 'bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}}">
                     {{ __('Admins') }}
                 </a>
                 <a href="{{ route('users.index', ['type' => 'E']) }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'E' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'E' ? 'bg-gray-300 text-gray-80 dark:text-gray-400 dark:bg-white hover:bg-gray-50' : 'bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}}">
                     {{ __('Employees') }}
                 </a>
                 <a href="{{ route('users.index', ['type' => 'C']) }}"
-                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'C' ? 'bg-white hover:bg-gray-300' : 'bg-gray-800 hover:bg-gray-700' }}">
+                   class="inline-block px-4 py-2 rounded-md text-gray-400 transition duration-200 {{ request('type') == 'C' ? 'bg-gray-300 text-gray-80 dark:text-gray-400 dark:bg-white hover:bg-gray-50' : 'bg-white dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
                     {{ __('Customers') }}
                 </a>
             </div>
 
             <div class="grid grid-cols-1 gap-4 mt-6">
                 @foreach($users as $user)
-                    <div class="bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex">
-                        <div class="p-6 sm:px-20 bg-gray-800 border-b border-gray-600 w-full">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg flex">
+                        <div class="p-6 sm:px-20 bg-white dark:bg-gray-800 border-b border-gray-600 w-full">
                             <div>
                                 <x-input-label for="name" :value="__('Name')" />
                                 <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
@@ -97,7 +87,7 @@
 
                         </div>
 
-                        <div class="p-6 sm:px-10 bg-gray-800 border-b border-gray-600 w-64">
+                        <div class="p-6 sm:px-10 bg-white dark:bg-gray-800 border-b border-gray-600 w-64">
                             <div class="flex justify-center">
                                 @if($user->photo_filename)
                                     <img src="{{ $user->getImageUrlAttribute() }}" alt="Profile Picture"

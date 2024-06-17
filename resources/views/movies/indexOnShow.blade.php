@@ -17,7 +17,6 @@
                         class="inline-block px-4 py-2 rounded-md text-gray-900 bg-white hover:bg-gray-300 transition duration-200">
                     {{ __('Search') }}
                 </button>
-
             </form>
         </div>
         <div class="flex flex-wrap justify-center">

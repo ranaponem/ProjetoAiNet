@@ -12,7 +12,7 @@
                 @csrf
                 @method('patch')
         
-                <div class="p-6 sm:px-10 bg-gray-800 flex">
+                <div class="p-6 sm:px-10 bg-white dark:bg-gray-800 flex">
                     <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10">
                         <x-field.input name="ticket_price" label="Ticket Price"
                                        value="{{ old('ticket_price', $conf->ticket_price) }}"/>

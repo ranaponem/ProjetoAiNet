@@ -6,9 +6,9 @@
     <div class="container mx-auto mt-6">
         
 
-        <div class="mb-4 rounded p-10 text-white bg-gray-800">
-            <h2 class="text-white text-3xl font-bold mb-4">You are about to add a ticket for '{{ $screening->movie->title }}' to cart</h2>
-            <div class="inline-block  mb-4 rounded py-4 px-8 text-white bg-gray-700" >
+        <div class="mb-4 rounded p-10 text-black dark:text-white bg-white dark:bg-gray-800">
+            <h2 class="text-gray-800 dark:text-white text-3xl font-bold mb-4">You are about to add a ticket for '{{ $screening->movie->title }}' to cart</h2>
+            <div class="inline-block  mb-4 rounded py-4 px-8 text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700" >
                 <p class="my-1 text-2xl"><strong>Movie:</strong> {{ $screening->movie->title }}</p>
                 <p class="my-1"><strong>Date:</strong> {{ $screening->date }}</p>
                 <p class="my-1"><strong>Screening Time:</strong> {{ $screening->start_time }}</p>

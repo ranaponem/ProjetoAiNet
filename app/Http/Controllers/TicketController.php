@@ -7,17 +7,27 @@ use App\Models\Screening;
 use App\Models\Seat;
 use App\Models\Ticket;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $tickets = Ticket::all();
+        $query = Ticket::query();
+
+        if ($request->has('search') && $request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+            });
+        }
+
+        $tickets = $query->paginate(30)->withQueryString();
         return view('tickets.index')->with('tickets', $tickets);
     }
 

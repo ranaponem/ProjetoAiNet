@@ -38,10 +38,10 @@ Route::middleware('auth', 'verified')->group(function () {
             Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy');
         });
         Route::middleware('can:viewAny,\App\Model\Ticket')->group(function(){
-            Route::resource('tickets',TicketController::class)->except(['create, show']);
+            Route::resource('tickets',TicketController::class)->except(['create', 'show', 'validate']);
         });
         Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
-        Route::get('tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate')->can('validate', Ticket::class);
+        Route::middleware('can:validate,\App\Model\Ticket')->get('tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate');
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
             ->middleware('can:destroyPhoto,user');
@@ -50,7 +50,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::patch('/configuration', [ConfigurationController::class, 'update'])->name('configuration.update');
 
         Route::middleware('can:viewAny,\App\Model\Movie')->group(function(){
-            Route::resource('movies', MovieController::class)->except(['index, show']);
+            Route::resource('movies', MovieController::class)->except(['index', 'show']);
         });
 
         Route::resource('genres', GenreController::class);

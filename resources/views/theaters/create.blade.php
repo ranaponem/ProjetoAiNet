@@ -9,7 +9,7 @@
         @csrf
         <div class="mt-6 space-y-4 relative">
 
-            <div class="p-6 sm:px-10 bg-gray-800 flex">
+            <div class="p-6 sm:px-10 bg-white dark:bg-gray-800 flex">
                 <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10 mt-14">
                     <x-field.input name="name" label="Name"
                                    value="{{ old('name', $theater->name) }}"/>

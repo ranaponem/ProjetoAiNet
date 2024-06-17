@@ -10,7 +10,7 @@
     <form id="profile-form" method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-        <div class="p-6 sm:px-10 bg-gray-800 w-96">
+        <div class="p-6 sm:px-10 bg-white dark:bg-gray-800 w-96">
             <x-field.image
                 id="image_file"
                 name="image_file"

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Create new Theater')
+@section('header-title', 'Edit Theater')
 
 @section('main')
 
@@ -12,7 +12,7 @@
                 @csrf
                 @method('patch')
         
-                <div class="p-6 sm:px-10 bg-gray-800 flex">
+                <div class="p-6 sm:px-10 bg-white dark:bg-gray-800 flex">
                     <div class="grow w-2/3 mt-9 space-y-4 inline-block mr-10">
                         <x-field.input name="name" label="Name"
                                        value="{{ old('name', $theater->name) }}"/>
@@ -25,9 +25,9 @@
                             width="md"
                             height=""
                             deleteTitle="Delete"
-                            :deleteAllow="$theater->photo_filename"
+                            :deleteAllow="$theater->getImageExistsAttribute()"
                             deleteForm="form_to_delete_image"
-                            :imageUrl="$theater->photo_filename ? asset('storage/photos/' . $theater->photo_filename) : 'storage/photos/475_666c4e5ed23f0.jpg'"
+                            :imageUrl="$theater->getImageUrlAttribute()"
                         />
                     </div>
                 </div>

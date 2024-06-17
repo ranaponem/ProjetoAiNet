@@ -17,9 +17,9 @@
         @endcan
         @foreach($theaters as $theater)
 
-            <div class="bg-gray-800 overflow-hidden -my-2 sm:rounded-lg flex">
-                <div class="p-6 sm:px-3 bg-gray-800  w-full flex">
-                    <div class=" sm:px-10 bg-gray-800 border-gray-600 w-64 inline-block">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden -my-2 sm:rounded-lg flex">
+                <div class="p-6 sm:px-3 bg-white dark:bg-gray-800  w-full flex">
+                    <div class=" sm:px-10 bg-white dark:bg-gray-800 border-gray-600 w-64 inline-block">
                         <div class="flex justify-center">
                             @if($theater->photo_filename)
                                 <img src="{{ $theater->getImageUrlAttribute() }}" alt="Profile Picture"
@@ -31,7 +31,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class=" sm:px-10 bg-gray-800 border-gray-600 w-full inline-block">
+                    <div class=" sm:px-10 bg-white dark:bg-gray-800 border-gray-600 w-full inline-block">
                         <div class="w-full" >
                             <x-input-label for="name" :value="__('Name')" />
                             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
