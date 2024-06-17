@@ -44,11 +44,14 @@
                             {{ __('Genres') }}
                         </x-nav-link>
                     @endcan
-
-
                     @can('viewAny', \App\Models\Ticket::class)
                         <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('dashboard')">
                             {{ __('Tickets') }}
+                        </x-nav-link>
+                    @endcan
+                    @can('viewStatistics', \App\Models\Movie::class)
+                        <x-nav-link :href="route('movies.statistics')" :active="request()->routeIs('dashboard')">
+                            {{ __('Statistics') }}
                         </x-nav-link>
                     @endcan
                 </div>

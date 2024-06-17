@@ -37,6 +37,20 @@ class MovieController extends Controller
         return view('movies.index',compact('movies', 'genres'));
     }
 
+    public function statistics(): View
+    {
+        $moviesTop10 = Movie::with(['screenings' => function($query) {
+            $query->withCount('tickets');
+            }])
+            ->get()
+            ->sortByDesc(function($movie) {
+                return $movie->screenings->sum('tickets_count');
+                })
+            ->take(5);
+
+        return view('movies.statistics',compact('moviesTop10'));
+    }
+
     public function indexOnShow(Request $request): View
     {
         $startDate = Carbon::today();

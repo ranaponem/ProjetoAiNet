@@ -56,6 +56,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::resource('screenings', ScreeningController::class)->except(['show']);
 
     Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
+    Route::get('/movies/statistics', [MovieController::class, 'statistics'])->name('movies.statistics')->can('viewStatistics', Movie::class);
     Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('cart', [CartController::class, 'show'])->name('cart.show');
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');

@@ -47,4 +47,9 @@ class MoviePolicy
         // Example logic: Allow viewing screenings if the movie is on show
         return $movie->isOnShow();
     }
+
+    public function viewStatistics(User $user): bool
+    {
+        return $user->type === 'A';
+    }
 }
