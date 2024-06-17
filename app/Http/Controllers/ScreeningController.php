@@ -64,8 +64,7 @@ class ScreeningController extends Controller
             // Add more fields as needed
         ]);
 
-        return redirect()->route('screenings.index', ['movie' => $request->movie_id])
-            ->with('success', 'Screening created successfully.');
+        return redirect()->route('screenings.index', ['movie' => $request->movie_id]);
     }
 
     public function show(string $id)

@@ -40,7 +40,6 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::middleware('can:viewAny,\App\Model\Ticket')->group(function(){
             Route::resource('tickets',TicketController::class)->except(['create', 'show', 'validate']);
         });
-        Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
         Route::middleware('can:validate,\App\Model\Ticket')->get('tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate');
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
@@ -54,13 +53,13 @@ Route::middleware('auth', 'verified')->group(function () {
         });
 
         Route::resource('genres', GenreController::class);
-        Route::resource('screenings', ScreeningController::class);
+        Route::resource('screenings', ScreeningController::class)->except(['show']);
 
     Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
-        Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-        Route::get('cart', [CartController::class, 'show'])->name('cart.show');
-        Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
-        Route::resource('purchases', PurchaseController::class);
+    Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+    Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::resource('purchases', PurchaseController::class);
 });
 
 //Public routes
@@ -71,6 +70,8 @@ Route::get('/', function () {
 
 Route::get('/moviesOnShow', [MovieController::class, 'indexOnShow'])->name('movies.indexOnShow');
 Route::get('/moviesOnShow/{movie}/show', [MovieController::class, 'show'])->name('movies.show');
+Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+Route::get('/screenings/{screening}/show', [ScreeningController::class, 'show'])->name('screenings.show');
 
 Route::middleware('can:use-cart')->group(function () {
     Route::post('/cart/confirm', [CartController::class, 'confirm'])->name('cart.confirm');

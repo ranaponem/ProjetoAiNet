@@ -66,5 +66,8 @@
                 </table>
             </div>
         @endif
+        <div class="mt-4">
+            {{ $purchases->links() }}
+        </div>
     </div>
 @endsection

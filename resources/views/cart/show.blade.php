@@ -157,7 +157,7 @@
                                                 </div>
                                                 <div class="w-full flex">
                                                     <strong class="mt-3 mr-3 w-48">NIF:</strong>
-                                                    <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="auth()->user()->customer->nif  " required autocomplete="nif" />
+                                                    <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="auth()->user()->customer->nif" autocomplete="nif" />
                                                     <x-input-error class="mt-2" :messages="$errors->get('nif')" />
                                                 </div>
                                             </div>

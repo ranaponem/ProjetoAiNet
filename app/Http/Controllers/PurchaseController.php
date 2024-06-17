@@ -33,7 +33,7 @@ class PurchaseController extends Controller
             $query->where('customer_id', $user->customer->id)->orderBy('created_at', 'desc');
         }
 
-        $purchases = $query->paginate(30)->withQueryString();
+        $purchases = $query->paginate(15)->withQueryString();
 
         return view('purchases.index', compact('purchases'));
     }

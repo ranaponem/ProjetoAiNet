@@ -66,11 +66,13 @@
                     </div>
                     <div class="overflow-y-scroll no-scrollbar mt-4  justify-center">
                         @foreach ($screenings as $screening)
+                        @if(Auth::user())
                             @can('create', \App\Models\Ticket::class)
                             <a href="{{ route('screenings.show',['screening'=>$screening])  }}">
                                 <div class="flex hover:bg-gray-800">
                                     <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
                                     <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
+                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">{{$screening->tickets->count()<$screening->theater->seats->count()?'Disponivel':'Completa'}}</h1>
                                 </div>
                             </a>
                             @endcan
@@ -79,9 +81,19 @@
                                     <div class="flex hover:bg-gray-800">
                                         <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
                                         <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
+                                        <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">{{$screening->tickets->count()<$screening->theater->seats->count()?'Disponivel':'Completa'}}</h1>
                                     </div>
                                 </a>
                             @endcan
+                        @else
+                            <a href="{{ route('screenings.show',['screening'=>$screening])  }}">
+                                <div class="flex hover:bg-gray-800">
+                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
+                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
+                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">{{$screening->tickets->count()<$screening->theater->seats->count()?'Disponivel':'Completa'}}</h1>
+                                </div>
+                            </a>
+                        @endif
                         @endforeach
                     </div>
                 </div>

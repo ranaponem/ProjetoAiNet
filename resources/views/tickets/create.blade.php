@@ -27,14 +27,14 @@
             <div class="">
                 <x-primary-button class="py-3"
                                     x-data=""
-                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-theater-deletion')"
+                                    x-on:click.prevent="$dispatch('open-modal', 'confirm-ticket-add')"
                 >{{ __('Add to Cart') }}</x-primary-button>
             </div>
             
         </div>
     </div>
 
-    <x-modal name="confirm-theater-deletion" :show="$errors->theaterDeletion->isNotEmpty()" focusable>
+    <x-modal name="confirm-ticket-add" :show="$errors->theaterDeletion->isNotEmpty()" focusable>
             <form action="{{ route('cart.add') }}" id="multi-action-form" method="POST" class="ml-2">
                     @csrf
                 <div class="m-4">
