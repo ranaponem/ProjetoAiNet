@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //identificar cada tipo de user
-        //Miguel Silva
         Gate::define('employee', function (User $user): bool {
             return $user->type === 'E';
         });

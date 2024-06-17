@@ -50,11 +50,11 @@
                                     <x-dropdown-link href="{{ route('movies.show', ['movie' => $movie, 'filter' => '0']) }}">
                                         {{ __('Today') }}
                                     </x-dropdown-link>
-                                    @if(auth()->user()->type === 'A')
+                                    @can('viewAny', 'movie')
                                         <x-dropdown-link href="{{ route('movies.show', ['movie' => $movie, 'filter' => '2']) }}">
                                             {{ __('All') }}
                                         </x-dropdown-link>
-                                    @endif
+                                    @endcan
                                 </x-slot>
                             </x-dropdown>
                         </div>
@@ -73,14 +73,20 @@
                                     <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
                                 </div>
                             </a>
-                            @endcan
-                            @can('validate', 'ticket')
-                            <a href="{{ route('tickets.validate',['screening'=>$screening])  }}">
-                                <div class="flex hover:bg-gray-800">
-                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
-                                    <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
-                                </div>
-                            </a>
+                                @else
+                                @can('validate', 'ticket')
+                                    <a href="{{ route('tickets.validate',['screening'=>$screening])  }}">
+                                        <div class="flex hover:bg-gray-800">
+                                            <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
+                                            <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
+                                        </div>
+                                    </a>
+                                @else
+                                    <div class="flex hover:bg-gray-800">
+                                        <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
+                                        <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
+                                    </div>
+                                @endcan
                             @endcan
                         @endforeach
                     </div>

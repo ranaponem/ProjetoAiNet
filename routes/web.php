@@ -37,7 +37,10 @@ Route::middleware('auth', 'verified')->group(function () {
             Route::resource('theaters', TheaterController::class);
             Route::delete('theaters/{theater}/photo', [TheaterController::class, 'destroyPhoto'])->name('theaters.photo.destroy');
         });
-        Route::resource('tickets',TicketController::class);
+        Route::middleware('can:viewAny,\App\Model\Ticket')->group(function(){
+            Route::resource('tickets',TicketController::class)->except(['create, show']);
+        });
+        Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
         Route::get('tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate')->can('validate', Ticket::class);
         Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
             ->name('users.photo.destroy')
