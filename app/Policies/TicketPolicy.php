@@ -21,8 +21,6 @@ class TicketPolicy
 
     public function create(User $user): bool
     {
-        if(!$user)
-            return true;
         return $user->type !== 'E';
     }
 

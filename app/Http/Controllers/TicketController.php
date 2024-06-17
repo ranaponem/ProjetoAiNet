@@ -23,7 +23,7 @@ class TicketController extends Controller
 
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
+                $q->where('name', 'like', '%' . $request->search . '%');
             });
         }
 

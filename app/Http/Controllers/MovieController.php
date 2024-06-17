@@ -243,9 +243,10 @@ class MovieController extends Controller
      */
     public function destroy(Movie $movie): RedirectResponse
     {
-        // Delete associated screenings first (assuming a one-to-many relationship)
-        foreach ($movie->screenings as $screening) {
-            $screening->delete();
+        $startDate = Carbon::today();
+        $endDate = $startDate->copy()->addWeeks(2);
+        if($this->getScreeningsForDateRange($movie, $startDate, $endDate)->count() !== 0){
+            return redirect()->route('movies.index');
         }
 
         // Delete the movie's poster file if it exists
@@ -257,6 +258,6 @@ class MovieController extends Controller
         $movie->delete();
 
         // Redirect back to the index page with success message
-        return redirect()->route('movies.index')->with('success', 'Movie deleted successfully!');
+        return redirect()->route('movies.index');
     }
 }

@@ -122,12 +122,13 @@ class ScreeningController extends Controller
     public function destroy(Screening $screening)
     {
         try {
+            if($screening->tickets->count() !== 0){
+                return redirect()->route('screenings.index', ['movie' => $screening->movie_id]);
+            }
             $screening->delete();
-            return redirect()->route('screenings.index', ['movie' => $screening->movie_id])
-                ->with('success', 'Screening deleted successfully.');
+            return redirect()->route('screenings.index', ['movie' => $screening->movie_id]);
         } catch (\Exception $e) {
-            return redirect()->route('screenings.index', ['movie' => $screening->movie_id])
-                ->with('error', 'Screening not found.');
+            return redirect()->route('screenings.index', ['movie' => $screening->movie_id]);
         }
     }
 

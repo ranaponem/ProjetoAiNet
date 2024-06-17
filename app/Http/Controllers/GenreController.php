@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Genre;
+use App\Models\Movie;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -66,13 +68,12 @@ class GenreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $code)
+    public function update(Request $request, Genre $genre)
     {
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $genre = Genre::where('code', $code)->firstOrFail();
         $genre->name = $request->name;
         $genre->save();
 
@@ -82,11 +83,29 @@ class GenreController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $code)
+    public function destroy(Genre $genre)
     {
-        $genre = Genre::where('code', $code)->firstOrFail();
+        $startDate = Carbon::today();
+        $endDate = $startDate->copy()->addWeeks(2);
+        foreach($genre->movies as $movie){
+            if($this->getScreeningsForDateRange($movie, $startDate, $endDate)->count() !== 0){
+                return redirect()->route('genres.index');
+            }
+        }
+
         $genre->delete();
 
-        return redirect()->route('genres.index')->with('success', 'Genre deleted successfully.');
+        return redirect()->route('genres.index');
+    }
+
+    private function getScreeningsForDateRange(Movie $movie, Carbon $startDate, Carbon $endDate)
+    {
+        $now = Carbon::now();
+        $fiveMinutesAgo = $now->copy()->subMinutes(5);
+
+        return $movie->screenings()
+            ->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()])
+            ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', start_time), '%Y-%m-%d %H:%i:%s') >= ?", [$fiveMinutesAgo])
+            ->get();
     }
 }
