@@ -4,6 +4,7 @@ use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
@@ -48,6 +49,9 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::middleware('can:viewAny,\App\Model\Movie')->group(function(){
             Route::resource('movies', MovieController::class)->except(['index, show']);
         });
+
+        Route::resource('genres', GenreController::class);
+
 
     Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
         Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');

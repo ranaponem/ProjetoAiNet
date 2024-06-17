@@ -39,6 +39,12 @@
                                 {{ __('Create Movies') }}
                             </x-nav-link>
                     @endcan
+                    @can('create', \App\Models\Genre::class)
+                        <x-nav-link :href="route('genres.index')" :active="request()->routeIs('dashboard')">
+                            {{ __('Genres') }}
+                        </x-nav-link>
+                    @endcan
+
 
                     @can('viewAny', \App\Models\Ticket::class)
                         <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('dashboard')">
