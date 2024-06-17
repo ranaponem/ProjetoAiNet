@@ -102,6 +102,14 @@
                         </button>
                     </form>
                 </div>
+
+
+                <!-- Create Screening Button -->
+                <div class="mt-6">
+                    <a href="{{ route('screenings.index',['movie' => $movie ]) }}" class="inline-block px-4 py-2 rounded-md text-white bg-amber-500 hover:bg-red-600 transition duration-200">
+                        See Screenings
+                    </a>
+                </div>
             </div>
         </div>
     </div>

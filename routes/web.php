@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth', 'verified')->group(function () {
         Route::view('/dashboard', 'dashboard')->name('dashboard');
         Route::resource('customers', CustomerController::class);
-        Route::resource('screenings',ScreeningController::class);
+
         Route::middleware('can:view,\App\Model\User')->group(function(){
             Route::resource('users', UserController::class);
         });
@@ -51,7 +51,7 @@ Route::middleware('auth', 'verified')->group(function () {
         });
 
         Route::resource('genres', GenreController::class);
-
+        Route::resource('screenings', ScreeningController::class);
 
     Route::get('/movies', [MovieController::class, 'index'])->name('movies.index')->can('viewAny', Movie::class);
         Route::post('cart/add', [CartController::class, 'addToCart'])->name('cart.add');
