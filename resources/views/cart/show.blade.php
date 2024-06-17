@@ -29,26 +29,8 @@
             @empty($cart)
                 <h3 class="text-xl w-96 text-center">Cart is Empty</h3>
             @else
-                <div class="">
-                    <div class="flex justify-between space-x-12 items-end">
-                        <div class="w-full mt-8 text-gray-400 bg-gray-800 p-10 pb-2 rounded-lg shadow">
-                            <h3 class="text-2xl text-gray-300 mb-4">Client Information</h3>
-                            <div class="mb-4 flex justify-between">
-                                <div class="inline-block">
-                                    <p><strong>Name:</strong> {{ auth()->user()->name }}</p>
-                                    <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
-                                    <p><strong>Payment Type:</strong>{{ auth()->user()->customer->payment_type }}</p>
-                                    <p><strong>Payment Ref:</strong>{{ auth()->user()->customer->payment_ref }}</p>
-                                    <p><strong>NIF:</strong>{{ auth()->user()->customer->nif }}</p>
-                                </div>
-                                <div class="h-full mt-28">
-                                    <a href="{{ route('profile.edit') }}">
-                                        <x-secondary-button href="{{ route('profile.edit') }}">Something wrong?</x-secondary-button>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="w-full">
+                    
                     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         <div class="w-full">
                             <h3 class="text-xl mb-3">Cart Items</h3>
@@ -116,35 +98,79 @@
                                 <div class="flex justify-between"><h3 class="text-2xl text-gray-300 mb-3 mt-6 py-3">Sub-Total: </h3><h3 class="text-2xl text-gray-300 my-5 pb-2 pt-4">${{ number_format($total, 2) }}</h3></div>
                                 
                             </div>
-                            <div class="flex justify-end">
-                                <!-- Form to submit cart items to purchase creation -->
-                                <form action="{{ route('purchases.store') }}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="cart" value="{{ json_encode($cart) }}">
-                                    <input type="hidden" name="total_price" value="{{ $total }}">
-                                    <input type="hidden" name="customer_id" value="{{ auth()->user()->customer->id }}">
-                                    <input type="hidden" name="payment_type" value="{{ auth()->user()->customer->payment_type }}">
-                                    <input type="hidden" name="payment_ref" value="{{ auth()->user()->customer->payment_ref }}">
-                                    <input type="hidden" name="nif" value="{{ auth()->user()->customer->nif }}">
-                                    <input type="hidden" name="customer_name" value="{{ auth()->user()->name }}">
-                                    <input type="hidden" name="customer_email" value="{{ auth()->user()->email }}">
-                                    <!--create a date field with today's date-->
-                                    <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
-                                    <x-button element="submit" type="primary" text="Continue to Checkout" class="mt-4" />
-                                </form>
+                            <div class="flex justify-between w-full">
+                                <div>
+                                    <!-- Form for clearing the entire cart -->
+                                    <form action="{{ route('cart.destroy') }}" method="post">
+                                        @csrf
+                                        @method('DELETE') <!-- Ensure DELETE method -->
+                                        <x-button element="submit" type="danger" text="Clear Cart" class="mt-4" />
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div> 
-                    <div class="flex justify-between w-full">
-                        <div>
-                            <!-- Form for clearing the entire cart -->
-                            <form action="{{ route('cart.destroy') }}" method="post">
-                                @csrf
-                                @method('DELETE') <!-- Ensure DELETE method -->
-                                <x-button element="submit" type="danger" text="Clear Cart" class="mt-4" />
-                            </form>
-                        </div>
+                        
+                        
                     </div>
+                    <div class="w-full grid grid-cols-1 mt-8 text-gray-400 bg-gray-800 p-10 pb-2 rounded-lg shadow">
+                                <h3 class="text-2xl text-gray-300 mb-4">Client Information</h3>
+                                <form action="{{ route('purchases.store') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="cart" value="{{ json_encode($cart) }}">
+                                        <input type="hidden" name="total_price" value="{{ $total }}">
+                                        <input type="hidden" name="customer_id" value="{{ auth()->user()->customer->id }}">
+                                        <input type="hidden" name="payment_type" value="{{ auth()->user()->customer->payment_type }}">
+                                        <input type="hidden" name="payment_ref" value="{{ auth()->user()->customer->payment_ref }}">
+                                        <input type="hidden" name="nif" value="{{ auth()->user()->customer->nif }}">
+                                        <input type="hidden" name="customer_name" value="{{ auth()->user()->name }}">
+                                        <input type="hidden" name="customer_email" value="{{ auth()->user()->email }}">
+                                        <!--create a date field with today's date-->
+                                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                                    <div class="mb-4 grid lg:grid-cols-3 sm:grid-cols-1"> 
+                                        <div class="inline-block mx-4">
+                                            <div class="w-full flex">
+                                                <strong class="mt-3 mr-3">Name:</strong>
+                                                <x-text-input id="customer_name" name="customer_name" type="text" class="mt-1 block w-full" :value="auth()->user()->name " required autocomplete="customer_name" />
+                                                <x-input-error class="mt-2" :messages="$errors->get('customer_name')" />
+                                            </div>
+                                            <div class="w-full flex">
+                                                <strong class="mt-3 mr-4">Email:</strong>
+                                                <x-text-input id="customer_email" name="customer_email" type="text" class="mt-1 block w-full" :value="auth()->user()->email  " required autocomplete="customer_email" />
+                                                <x-input-error class="mt-2" :messages="$errors->get('customer_email')" />
+                                            </div>
+                                            <div class="h-full lg:mt-10 md:mt-10 sm:mt-6 sm:mb-6 flex">
+                                                <a class="underline text-gray-400"href="{{ route('profile.edit') }}">
+                                                    Something wrong?
+                                                </a>
+                                            </div>
+                                            </div>
+                                            <div class="mx-4">
+                                                <div class="w-full flex">
+                                                    <strong class="mt-3 mr-3 w-48">Payment Type:</strong>
+                                                    <x-text-input id="payment_type" name="payment_type" type="text" class="mt-1 block w-full" :value="auth()->user()->customer->payment_type  " required autocomplete="payment_type" />
+                                                    <x-input-error class="mt-2" :messages="$errors->get('payment_type')" />
+                                                </div>
+                                                <div class="w-full flex">
+                                                    <strong class="mt-3 mr-3 w-48">Payment Ref:</strong>
+                                                    <x-text-input id="payment_ref" name="payment_ref" type="text" class="mt-1 block w-full" :value="auth()->user()->customer->payment_ref  " required autocomplete="payment_ref" />
+                                                    <x-input-error class="mt-2" :messages="$errors->get('payment_ref')" />
+                                                </div>
+                                                <div class="w-full flex">
+                                                    <strong class="mt-3 mr-3 w-48">NIF:</strong>
+                                                    <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="auth()->user()->customer->nif  " required autocomplete="nif" />
+                                                    <x-input-error class="mt-2" :messages="$errors->get('nif')" />
+                                                </div>
+                                            </div>
+                                            <div class="h-full mt-28 flex justify-end">
+                                                
+                                                <x-button element="submit" type="primary" text="Continue to Checkout" class="mt-4" />
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </form>
+                        </div> 
+                    
                    
                 </div>
             @endempty

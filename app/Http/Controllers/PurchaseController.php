@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Purchase;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Services\Payment;
 
 class PurchaseController extends Controller
 {
@@ -23,13 +24,16 @@ class PurchaseController extends Controller
 
     public function index()
     {
+        $query = Purchase::query();
         // Fetch all purchases ordered by the latest
         if(auth()->user()->type==='A'){
-            $purchases = Purchase::orderBy('created_at', 'desc')->get();
+            $query->orderBy('created_at', 'desc');
         }else{
             $user = auth()->user();
-            $purchases = Purchase::where('customer_id', $user->customer->id)->orderBy('created_at', 'desc')->get();
+            $query->where('customer_id', $user->customer->id)->orderBy('created_at', 'desc');
         }
+
+        $purchases = $query->paginate(30)->withQueryString();
 
         return view('purchases.index', compact('purchases'));
     }
@@ -40,7 +44,7 @@ class PurchaseController extends Controller
 
         // Validate the incoming request
         $validated = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'nullable|exists:customers,id',
             'date' => 'required|date',
             'total_price' => 'required|numeric|min:0',
             'customer_name' => 'required|string|max:255',
@@ -52,7 +56,23 @@ class PurchaseController extends Controller
         ]);
 
         $cart = json_decode($request->input('cart'), true);
-
+        if ($request->payment_type == 'VISA') {
+            //because we don't store de cvc code we just send a valid one
+            if (!Payment::payWithVisa($request->payment_ref, 177)) {
+                return redirect()->back()->withInput()->with('error', 'Failed to create customer. Invalid payment data.');
+            }
+        }
+        //do the same with paypal and mbway
+        if ($request->payment_type == 'PAYPAL') {
+            if (!Payment::payWithPaypal($request->payment_ref)) {
+                return redirect()->back()->withInput()->with('error', 'Failed to create customer. Invalid payment data.');
+            }
+        }
+        if ($request->payment_type == 'MBWAY') {
+            if (!Payment::payWithMBway($request->payment_ref)) {
+                return redirect()->back()->withInput()->with('error', 'Failed to create customer. Invalid payment data.');
+            }
+        }
         // Create a new Purchase instance
         $purchase = Purchase::create([
             'customer_id' => $validated['customer_id'],

@@ -43,11 +43,11 @@
                     <input type="hidden" name="price" value="{{ $price }}">
                     <input type="hidden" name="redirect" id="redirect" value="">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    {{ __('Are you sure you want to delete this theater?') }}
+                    {{ __('The Ticket has been addaed to cart') }}
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('Once this theater is deleted, all of its resources and data will be permanently deleted.') }}
+                    {{ __('How do you wish to proceed?') }}
                 </p>
 
                 <div class="mt-6 flex justify-end ">

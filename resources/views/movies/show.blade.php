@@ -73,20 +73,14 @@
                                     <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
                                 </div>
                             </a>
-                                @else
-                                @can('validate', 'ticket')
-                                    <a href="{{ route('tickets.validate',['screening'=>$screening])  }}">
-                                        <div class="flex hover:bg-gray-800">
-                                            <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
-                                            <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
-                                        </div>
-                                    </a>
-                                @else
+                            @endcan
+                            @can('validate', 'ticket')
+                                <a href="{{ route('tickets.validate',['screening'=>$screening])  }}">
                                     <div class="flex hover:bg-gray-800">
                                         <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Theater: {{ $screening->theater->name }} </h1>
                                         <h1 class="inline-block text-center font-bold p-4 text-black dark:text-gray-50">Date: {{ $screening->date }} {{ $screening->start_time }}</h1>
                                     </div>
-                                @endcan
+                                </a>
                             @endcan
                         @endforeach
                     </div>

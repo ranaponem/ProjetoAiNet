@@ -84,6 +84,14 @@
                                     </x-dropdown-link>
                                 @endcan
                             @endif
+
+                            
+                            <x-dropdown-link :href="route('purchases.index')">
+                                @if(Auth::user()->type === 'C'){{ __('My Purchase History') }}@endif
+                                @if(Auth::user()->type === 'A'){{ __('Purchase History') }}@endif 
+                            </x-dropdown-link>
+                               
+
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
